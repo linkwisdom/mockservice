@@ -20,6 +20,15 @@ param符合严格规范的json格式
 - index.js 文件可以定义多个接口的响应函数
 - {pathname}.js 文件只能定义对应pathname的响应函数
 
+## 安装
+
+> npm install https://github.com/fcfe/mockservice.git -g
+
+选择npm安装 (最近dns还未完全恢复)
+
+> npm install mockservice
+
+
 ## 启动服务器
 
 ### 依赖edp
@@ -49,7 +58,7 @@ param符合严格规范的json格式
     cd workspace
 
     // 指定debug为mock代码目录;
-    ms debug
+    mock debug
 
  > mockservice会自动扫描目录下所有文件；并导入所有文件暴露的接口
 
