@@ -39,10 +39,14 @@ exports.serve = function(request, response) {
         var body = request.body.toString();
         body = require('querystring').parse(body);
         if (body.param) {
-            param = JSON.parse(body.param);
+            try {
+                param = JSON.parse(body.param);
+            } catch(ex) {}
         }
     } else if (param && 'string' == typeof param) {
-        param = JSON.parse(param);
+        try {
+            param = JSON.parse(param);
+        } catch(ex) {}
     }
 
     var proc = scan.getResponse(path);

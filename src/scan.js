@@ -5,24 +5,27 @@ var ws = {};
 var pathList = {};
 
 function scanDir(cwd) {
+
+    if (fs.existsSync(cwd + '/index.js')) {
+        var pkg = require(cwd + '/index.js');
+        for (var item in pkg) {
+            ws[item] = pkg[item];
+        }
+    }
+
     var files = fs.readdirSync(cwd);
     files.forEach(function(file) {
         var pathname = path.join(cwd, file);
         var stat = fs.lstatSync(pathname);
         
         if (stat.isDirectory()) {
-            if (fs.existsSync(pathname + '/index.js')) {
-                var pkg = require(pathname);
-                for (var item in pkg) {
-                    ws[item] = pkg[item];
-                }
-            }
-            // 递归搜索
             scanDir(pathname);
         } else if (file.match(/^((GET)|(MOD)|(DEL))_/)) {
             var item = file.replace('.js', '');
             // 不会预加载; 动态加载；热响应
             pathList[item] = pathname;
+        } else if (file == 'index.js') {
+
         }
     });
 }
