@@ -2,9 +2,6 @@
 
 var ms = require('../');
 
-/**
- * 加载配置文件
- */
 function start(port, debugDir) {
     var fs = require( 'fs' );
     var path = require( 'path' );
@@ -24,8 +21,6 @@ function start(port, debugDir) {
 
 // test hold
 var argv = process.argv;
-if (argv[1] == __filename) {
-    var port = argv[2];
-    var debugDir = argv[3];
-    start(port, debugDir);
-}
+var port = argv[2];
+var debugDir = argv[3];
+start(port, debugDir);
