@@ -22,7 +22,7 @@ param符合严格规范的json格式
 
 ## 安装
 
-> npm install https://github.com/fcfe/mockservice.git -g
+> npm install git://github.com/fcfe/mockservice.git -g
 
 选择npm安装 (最近dns还未完全恢复)
 
