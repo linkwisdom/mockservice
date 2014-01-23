@@ -10,6 +10,6 @@ exports.getLocations = function () {
         {
             location: /^\/request.ajax/, 
             handler: ms.request({})
-        },
+        }
     ];
 };
