@@ -18,6 +18,9 @@
     "mockJSON",
     "mockservice"
   ],
+  "bin": {
+    "mock": "./bin/mock"
+  },
   "engines": {
     "node": "*"
   },

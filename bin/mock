@@ -1,0 +1,31 @@
+#! /usr/bin/env node
+
+var ms = require('../');
+
+/**
+ * 加载配置文件
+ */
+function start(port, debugDir) {
+    var fs = require( 'fs' );
+    var path = require( 'path' );
+    var cwd = process.cwd();
+
+    if (!debugDir) {
+        debugDir = path.resolve(cwd, 'debug');
+    }
+    
+    if (!fs.existsSync(debugDir) ) {
+        debugDir = cwd;
+    }
+
+    ms.config({dir: debugDir});
+    ms.listen(port || 8811);
+}
+
+// test hold
+var argv = process.argv;
+if (argv[1] == __filename) {
+    var port = argv[2];
+    var debugDir = argv[3];
+    start(port, debugDir);
+}
