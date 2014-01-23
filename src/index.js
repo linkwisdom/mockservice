@@ -3,7 +3,7 @@ var scan = require('./scan');
 // beef是为了支持客户端amd模块
 global.require = require('beef');
 
-var contentType = 'text/json;charset=utf-8';
+var contentType = 'text/plain;charset=utf-8';
 
 // 接受配置参数
 exports.config = function(config) {
@@ -47,7 +47,7 @@ exports.serve = function(request, response) {
 
     var proc = scan.getResponse(path);
 
-    if (proc) {
+    if (proc && 'function' == typeof proc) {
         var data = proc(path, param);
         var result = JSON.stringify(data);
 
@@ -99,4 +99,16 @@ exports.listen = function(port) {
     port || (port = 8181);
     require('http').createServer(service).listen(port);
     console.log('mockservice start on port:' + port);
+};
+
+// 为edp提供暴露接口
+exports.request = function(config) {
+    var me = this;
+    me.config(config);
+    return function(context) {
+        var request = context.request;
+        var response = context.response;
+        request.body = request.bodyBuffer;
+        me.serve(request, response);
+    };
 };

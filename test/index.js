@@ -1,4 +1,4 @@
-var ms = require('mockservice');
+var ms = require('../');
 
 // 为edp提供请求接口
 exports.request = function(config) {

@@ -9,7 +9,7 @@ function scanDir(cwd) {
     files.forEach(function(file) {
         var pathname = path.join(cwd, file);
         var stat = fs.lstatSync(pathname);
-
+        
         if (stat.isDirectory()) {
             if (fs.existsSync(pathname + '/index.js')) {
                 var pkg = require(pathname);
@@ -37,13 +37,16 @@ exports.getResponse = function(item) {
         // pathList 上的模块是不缓存的；除非指定为cache==true
         var fileName = pathList[item];
         if (fileName in require.cache) {
-            var json = require.cache[fileName];
-            if (!json || json.cache == true) {
-                delete require.cache[fileName];
-            }
+            require.cache[fileName];
+            delete require.cache[fileName];
         }
 
         // 所有动态模块不使用缓存
-        return require(fileName);
+        var obj = require(fileName);
+        if ('function' == typeof obj) {
+            return obj;
+        } else if (obj && item in obj) {
+            return obj[item];
+        }
     }
 };
