@@ -58,9 +58,10 @@ param符合严格规范的json格式
     cd workspace
 
     // 指定debug为mock代码目录;
-    mock debug
+    mock 8181 debug
 
  > mockservice会自动扫描目录下所有文件；并导入所有文件暴露的接口
+ > mock 的两个参数都是可选的
 
 ### ISSUE todo
 
