@@ -48,14 +48,19 @@ exports.serve = function(request, response) {
     var proc = scan.getResponse(path);
 
     if (proc && 'function' == typeof proc) {
-        var result = proc(path, param);
-        if (result && result.status) {
-            response.writeHead(200, contentType);
-        } else {
-            response.writeHead(500, contentType);
+        var result = {status: 500, data: null};
+        try {
+            result = proc(path, param);
+            if (result && result.status) {
+                response.writeHead(200, contentType);
+            } else {
+                response.writeHead(500, contentType);
+            }
+        } catch(ex) {
+            console.log('runtime error', path);
+        } finally {
+            response.end(pack(result));
         }
-        
-        response.end(pack(result));
     } else {
 
         response.writeHead(404, contentType);
