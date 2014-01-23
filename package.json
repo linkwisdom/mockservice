@@ -1,0 +1,29 @@
+{
+  "author": {
+    "name": "liandong liu"
+  },
+  "contacts": [
+    "liu@liandong.org"
+  ],
+  "name": "mockservice",
+  "description": "mockservice",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fcfe/mockservice.git"
+  },
+  "keywords": [
+    "mock",
+    "mockJSON",
+    "mockservice"
+  ],
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "license": "BSD",
+  "readmeFilename": "docs/README.md"
+}
