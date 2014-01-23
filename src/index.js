@@ -3,7 +3,7 @@ var scan = require('./scan');
 // beef是为了支持客户端amd模块
 global.require = require('beef');
 
-var contentType = 'text/plain;charset=utf-8';
+var contentType = 'text/json;charset=utf-8';
 
 // 接受配置参数
 exports.config = function(config) {
@@ -13,7 +13,7 @@ exports.config = function(config) {
 };
 
 function pack(obj) {
-    return JSON.stringify(obj);
+    return JSON.stringify(obj, '\t', 2);
 }
 
 
@@ -48,20 +48,18 @@ exports.serve = function(request, response) {
     var proc = scan.getResponse(path);
 
     if (proc && 'function' == typeof proc) {
-        var data = proc(path, param);
-        var result = JSON.stringify(data);
-
+        var result = proc(path, param);
         if (result && result.status) {
             response.writeHead(200, contentType);
         } else {
             response.writeHead(500, contentType);
         }
         
-        response.end(result);
+        response.end(pack(result));
     } else {
 
         response.writeHead(404, contentType);
-        response.end(JSON.stringify({
+        response.end(pack({
             status: 404,
             msg: 'not found'
         }));
