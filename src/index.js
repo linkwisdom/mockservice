@@ -13,9 +13,8 @@ exports.config = function(config) {
 };
 
 function pack(obj) {
-    return JSON.stringify(obj);
+    return JSON.stringify(obj, '\t', 2);
 }
-
 
 // 对外暴露的service接口
 exports.serve = function(request, response) {
@@ -39,29 +38,36 @@ exports.serve = function(request, response) {
         var body = request.body.toString();
         body = require('querystring').parse(body);
         if (body.param) {
-            param = JSON.parse(body.param);
+            try {
+                param = JSON.parse(body.param);
+            } catch(ex) {}
         }
     } else if (param && 'string' == typeof param) {
-        param = JSON.parse(param);
+        try {
+            param = JSON.parse(param);
+        } catch(ex) {}
     }
 
     var proc = scan.getResponse(path);
 
-    if (proc) {
-        var data = proc(path, param);
-        var result = JSON.stringify(data);
-
-        if (result && result.status) {
-            response.writeHead(200, contentType);
-        } else {
-            response.writeHead(500, contentType);
+    if (proc && 'function' == typeof proc) {
+        var result = {status: 500, data: null};
+        try {
+            result = proc(path, param);
+            if (result && result.status) {
+                response.writeHead(200, contentType);
+            } else {
+                response.writeHead(500, contentType);
+            }
+        } catch(ex) {
+            console.log('runtime error', path);
+        } finally {
+            response.end(pack(result));
         }
-        
-        response.end(result);
     } else {
 
         response.writeHead(404, contentType);
-        response.end(JSON.stringify({
+        response.end(pack({
             status: 404,
             msg: 'not found'
         }));
@@ -99,4 +105,16 @@ exports.listen = function(port) {
     port || (port = 8181);
     require('http').createServer(service).listen(port);
     console.log('mockservice start on port:' + port);
+};
+
+// 为edp提供暴露接口
+exports.request = function(config) {
+    var me = this;
+    me.config(config);
+    return function(context) {
+        var request = context.request;
+        var response = context.response;
+        request.body = request.bodyBuffer;
+        me.serve(request, response);
+    };
 };
