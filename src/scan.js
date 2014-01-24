@@ -20,7 +20,7 @@ function scanDir(cwd) {
         
         if (stat.isDirectory()) {
             scanDir(pathname);
-        } else if (file.match(/^((GET)|(MOD)|(DEL))_/)) {
+        } else if (file.match(/^((GET)|(MOD)|(DEL)|(ADD))_/)) {
             var item = file.replace('.js', '');
             // 不会预加载; 动态加载；热响应
             pathList[item] = pathname;

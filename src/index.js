@@ -16,7 +16,6 @@ function pack(obj) {
     return JSON.stringify(obj, '\t', 2);
 }
 
-
 // 对外暴露的service接口
 exports.serve = function(request, response) {
     var query= request.query; // 请求参数

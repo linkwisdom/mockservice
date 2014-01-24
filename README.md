@@ -14,10 +14,11 @@ param符合严格规范的json格式
 
 -构造数据代码规范
 
-> 所有响应request.ajax?path={pathname}&param={object}请求只能定义在 {pkgname}/index.js文件中；单个接口mock代码如果较大建议写成单个文件；文件命名为{pkgname}/{pathname}.js;
+> 所有响应request.ajax?path={pathname}&param={object}请求每个pathname对应一个mock文件；mock文件名`/`替换为`_`；
+独立mock文件命名为{pkgname}/{pathname}.js;
 
 - 对应每个接口应该指定一个响应函数；响应函数有固定参数列表(path, param)
-- index.js 文件可以定义多个接口的响应函数
+- index.js 文件可以定义多个接口的响应函数 (但是不建议写到index文件；除非path不符合GET/ADD/MOD/DEL形式)
 - {pathname}.js 文件只能定义对应pathname的响应函数
 
 ## 安装
