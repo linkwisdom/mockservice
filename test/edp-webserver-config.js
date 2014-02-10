@@ -3,7 +3,7 @@ exports.directoryIndexes = true;
 exports.documentRoot = __dirname;
 
 var ms = require('mockservice');
-ms.config({dir: __dirname + '/phoenix/debug'});
+ms.config({dir: __dirname + '/response'});
 
 exports.getLocations = function () {
     return [
