@@ -7,7 +7,7 @@
   ],
   "name": "mockservice",
   "description": "mockservice",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "main": "src/index.js",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "mock": "./bin/mock"
   },
   "dependencies": {
-    "beef": ">=0.0.1"
+    "beef": ">=0.0.2"
   },
   "engines": {
     "node": "*"

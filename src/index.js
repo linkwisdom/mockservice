@@ -13,8 +13,10 @@ exports.config = function(config) {
     }
 };
 
+
+// 封装数据
 function pack(obj) {
-    return JSON.stringify(obj, '\t', 2);
+    return JSON.stringify(obj, '\t', 4);
 }
 
 // 对外暴露的service接口
@@ -49,6 +51,7 @@ exports.serve = function(request, response) {
         } catch(ex) {}
     }
 
+    // 从服务列表中获取处理函数
     var proc = scan.getResponse(path);
 
     if (proc && 'function' == typeof proc) {
@@ -60,15 +63,30 @@ exports.serve = function(request, response) {
             } else if (result) {
                 response.writeHead(200, contentType);
             } else {
+                result = {
+                    timeout: 3000,
+                    data: 'service error'
+                };
                 response.writeHead(500, contentType);
             }
-        } catch(ex) {
-            console.log('runtime error', path);
-        } finally {
+
+            // 延迟响应请求， 默认为100ms
             setTimeout(function() {
                 delete result.timeout;
                 response.end(pack(result));
             }, result.timeout || timeoutSpan);
+
+            // 成功处理要直接退出
+            return;
+        } catch(ex) {
+            // 如果出现脚本错误；默认发送的是500错误
+            result.data = {
+                msg: 'script error'
+            };
+            console.log('runtime error', path);
+        } finally {
+            // 处理错误情况的响应
+            response.end(pack(result));
         }
     } else {
 

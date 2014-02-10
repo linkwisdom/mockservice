@@ -15,6 +15,11 @@ function scanDir(cwd) {
 
     var files = fs.readdirSync(cwd);
     files.forEach(function(file) {
+        // 避免引入.svn中的文件
+        if (file.charAt(0) == '.') {
+            return true;
+        }
+
         var pathname = path.join(cwd, file);
         var stat = fs.lstatSync(pathname);
         
@@ -28,6 +33,16 @@ function scanDir(cwd) {
 
         }
     });
+}
+
+function moduleError(path, param) {
+    return {
+        status: 500,
+        data: {
+            path: path,
+            msg: 'module require fail'
+        }
+    };
 }
 
 exports.scanDir = scanDir;
@@ -45,11 +60,18 @@ exports.getResponse = function(item) {
         }
 
         // 所有动态模块不使用缓存
-        var obj = require(fileName);
-        if ('function' == typeof obj) {
-            return obj;
-        } else if (obj && item in obj) {
-            return obj[item];
+        var obj = {};
+        try {
+            obj = require(fileName);
+            if ('function' == typeof obj) {
+                return obj;
+            } else if (obj && item in obj) {
+                return obj[item];
+            }
+        } catch(ex) {
+            // 预防语法错误导致模块加载失败
+            console.log('module error', fileName);
+            return moduleError;
         }
     }
 };
