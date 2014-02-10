@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    exports = function(path, param) {
+    module.exports = function(path, param) {
         return {
             status: 200,
             data: [
@@ -7,6 +7,4 @@ define(function(require, exports, module) {
             ]
         };
     };
-
-    return exports;
 });

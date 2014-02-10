@@ -4,6 +4,7 @@ var scan = require('./scan');
 global.require = require('beef');
 
 var contentType = 'text/json;charset=utf-8';
+var timeoutSpan = 100;
 
 // 接受配置参数
 exports.config = function(config) {
@@ -55,6 +56,8 @@ exports.serve = function(request, response) {
         try {
             result = proc(path, param);
             if (result && result.status) {
+                response.writeHead(result.status, contentType);
+            } else if (result) {
                 response.writeHead(200, contentType);
             } else {
                 response.writeHead(500, contentType);
@@ -62,7 +65,10 @@ exports.serve = function(request, response) {
         } catch(ex) {
             console.log('runtime error', path);
         } finally {
-            response.end(pack(result));
+            setTimeout(function() {
+                delete result.timeout;
+                response.end(pack(result));
+            }, result.timeout || timeoutSpan);
         }
     } else {
 
