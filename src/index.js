@@ -13,7 +13,6 @@ exports.config = function(config) {
     }
 };
 
-
 // 封装数据
 function pack(obj) {
     return JSON.stringify(obj, '\t', 4);
@@ -23,32 +22,46 @@ function pack(obj) {
 exports.serve = function(request, response) {
     var query= request.query; // 请求参数
     var path = query.path; //请求路径信息
-    var param = query.param;
 
-    if (!path) {
-        response.end(pack({
-            status: 200,
-            url: request.query
-        }));
-        return;
-    }
-
-    // 所有/转为_；方便mock接口命名
-    path = path.replace(/\//g, '_');
+    // 支持param和params两种参数接口
+    var param = query.param || query.params;
 
     // 如果是post过来的请求
     if (request.body) {
         var body = request.body.toString();
         body = require('querystring').parse(body);
-        if (body.param) {
+        if (body.param || body.params) {
             try {
-                param = JSON.parse(body.param);
+                param = JSON.parse(body.param || body.params);
             } catch(ex) {}
         }
+
+        if (body.path) {
+            path = body.path;
+        }
+
     } else if (param && 'string' == typeof param) {
+        // param 需要符合标准json格式
         try {
             param = JSON.parse(param);
-        } catch(ex) {}
+        } catch(ex) {
+            param = eval( '(' + param + ')');
+        }
+    }
+
+    // 如果从query和body中都未能够获得path信息；
+    if (path) {
+
+        // 所有/转为_；方便mock接口命名
+        path = path.replace(/\//g, '_');
+    } else {
+
+        // path不存在是参数错误
+        response.end(pack({
+            staus: 300,
+            data: 'request path undefined'
+        }));
+        return;
     }
 
     // 从服务列表中获取处理函数
@@ -83,6 +96,8 @@ exports.serve = function(request, response) {
             result.data = {
                 msg: 'script error'
             };
+
+            // 在日志中也记录
             console.log('runtime error', path);
         } finally {
             // 处理错误情况的响应
