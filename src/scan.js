@@ -43,7 +43,7 @@ function matchPath(file, regs) {
  * @param  {string} cwd 当前目标目录
  */
 function scanDir(cwd) {
-
+    // preConfig 是上级目录的配置
     var preConfig = config;
 
     if (fs.existsSync(cwd + '/index.js')) {
@@ -134,6 +134,8 @@ exports.getResponse = function(path) {
                 return obj;
             } else if (obj && path in obj) {
                 return obj[path];
+            } else {
+                return obj;
             }
         } catch(ex) {
             // 预防语法错误导致模块加载失败

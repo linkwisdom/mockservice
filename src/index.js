@@ -43,6 +43,7 @@ function pack(obj) {
 exports.serve = function(request, response) {
     var query= request.query; // 请求参数
     var path = query.path; //请求路径信息
+    var result = {status: 200, data: null};
 
     // 支持param和params两种参数接口
     var param = query.param || query.params;
@@ -73,9 +74,11 @@ exports.serve = function(request, response) {
 
     // 如果从query和body中都未能够获得path信息；
     if (path) {
+
         // 所有/转为_；方便mock接口命名
         path = path.replace(/\//g, '_');
     } else {
+
         // path不存在是参数错误
         response.end(pack({
             staus: 300,
@@ -88,14 +91,21 @@ exports.serve = function(request, response) {
     var proc = scan.getResponse(path);
 
     if (proc && 'function' == typeof proc) {
-        var result = {status: 500, data: null};
         try {
             result = proc(path, param);
+
+            // 根据返回值设定http status code
             if (result && result.status) {
+
+                // 返回正常，且有状态码
                 response.writeHead(result.status, contentType);
             } else if (result) {
+
+                // 如果有数据返回但是没有status, 默认为200
                 response.writeHead(200, contentType);
             } else {
+
+                // 如果返回值为空；则认为是服务端错误
                 result = {
                     timeout: 3000,
                     data: 'service error'
@@ -103,29 +113,35 @@ exports.serve = function(request, response) {
                 response.writeHead(500, contentType);
             }
 
-            // 延迟响应请求， 默认为100ms
-            setTimeout(function() {
-                // timeout 不返回到客户端
-                delete result.timeout;
-                response.end(pack(result));
-            }, result.timeout || timeoutSpan);
-
         } catch(ex) {
+            
             // 如果出现脚本错误；默认发送的是500错误
-            result.msg = ex;
-
-            // 在日志中记录错误信息
-            console.log('runtime error', path); 
-            response.end(pack(result));
+            result = {
+                status: 400,
+                msg: ex
+            };
         }
 
+    } else if (proc) {
+
+        // proc 返回的是一个对象；而不是函数；
+        result = proc;
     } else {
+
+        // 获取服务或数据失败
         response.writeHead(404, contentType);
-        response.end(pack({
+        result = {
             status: 404,
             msg: 'service not found'
-        }));
+        };
     }
+
+    // 延迟响应请求， 默认为100ms
+    setTimeout(function() {
+        // timeout 不返回到客户端
+        delete result.timeout;
+        response.end(pack(result));
+    }, result.timeout || timeoutSpan);
 };
 
 // 独立服务运行，为了兼容edp中post数据获取方式
