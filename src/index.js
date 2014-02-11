@@ -30,17 +30,18 @@ exports.serve = function(request, response) {
     if (request.body) {
         var body = request.body.toString();
         body = require('querystring').parse(body);
+
         if (body.param || body.params) {
-            try {
-                param = JSON.parse(body.param || body.params);
-            } catch(ex) {}
+            param = body.param || body.params;
         }
 
         if (body.path) {
             path = body.path;
         }
+    }
 
-    } else if (param && 'string' == typeof param) {
+    // param 解析为对象
+    if (param && 'string' == typeof param) {
         // param 需要符合标准json格式
         try {
             param = JSON.parse(param);
@@ -51,7 +52,6 @@ exports.serve = function(request, response) {
 
     // 如果从query和body中都未能够获得path信息；
     if (path) {
-
         // 所有/转为_；方便mock接口命名
         path = path.replace(/\//g, '_');
     } else {
@@ -108,7 +108,7 @@ exports.serve = function(request, response) {
         response.writeHead(404, contentType);
         response.end(pack({
             status: 404,
-            msg: 'not found'
+            msg: 'service not found'
         }));
     }
 };
