@@ -1,9 +1,30 @@
+/**
+ * @file 为前端构造数据提供mockservice服务
+ * 
+ * @refer https://github.com/fcfe/mockservice
+ * 
+ * @author  liandong (liu@liandong.org liuliandong01@baidu.com)
+ * 
+ * - 纯js实现的构造数据服务
+ * - 使用前端AMD标准模块化实现mock代码（依赖beef组件
+ * - 构造数据支持浏览器端与服务端
+ * - 自动扫描所有符合匹配规则的文件作为mock文件
+ * - 支持即时mock即时修改生效；无需重启服务器
+ * - 支持独立server启动; 也可兼容edp等支持node的服务器
+ * - 支持设置延迟响应
+ * - 支持自定义配置
+ *
+ */
+
 var scan = require('./scan');
 
-// beef是为了支持客户端amd模块
+// beef是为了支持客户端amd模块(@github.com/fcfe/beef)
 global.require = require('beef');
 
+// 设置服务mine类型
 var contentType = 'text/json;charset=utf-8';
+
+// 默认延迟时间为 100ms
 var timeoutSpan = 100;
 
 // 接受配置参数
@@ -55,7 +76,6 @@ exports.serve = function(request, response) {
         // 所有/转为_；方便mock接口命名
         path = path.replace(/\//g, '_');
     } else {
-
         // path不存在是参数错误
         response.end(pack({
             staus: 300,
@@ -85,26 +105,21 @@ exports.serve = function(request, response) {
 
             // 延迟响应请求， 默认为100ms
             setTimeout(function() {
+                // timeout 不返回到客户端
                 delete result.timeout;
                 response.end(pack(result));
             }, result.timeout || timeoutSpan);
 
-            // 成功处理要直接退出
-            return;
         } catch(ex) {
             // 如果出现脚本错误；默认发送的是500错误
-            result.data = {
-                msg: 'script error'
-            };
+            result.msg = ex;
 
-            // 在日志中也记录
-            console.log('runtime error', path);
-        } finally {
-            // 处理错误情况的响应
+            // 在日志中记录错误信息
+            console.log('runtime error', path); 
             response.end(pack(result));
         }
-    } else {
 
+    } else {
         response.writeHead(404, contentType);
         response.end(pack({
             status: 404,
@@ -113,6 +128,7 @@ exports.serve = function(request, response) {
     }
 };
 
+// 独立服务运行，为了兼容edp中post数据获取方式
 function service(request, response) {
     var url = require('url').parse(request.url, true);
     request.query = url.query;
@@ -146,7 +162,7 @@ exports.listen = function(port) {
     console.log('mockservice start on port:' + port);
 };
 
-// 为edp提供暴露接口
+// 为edp提供服务暴露接口
 exports.request = function(config) {
     var me = this;
     me.config(config);
@@ -155,5 +171,8 @@ exports.request = function(config) {
         var response = context.response;
         request.body = request.bodyBuffer;
         me.serve(request, response);
+
+        // 阻止其它规则干扰改请求
+        context.stop();
     };
 };

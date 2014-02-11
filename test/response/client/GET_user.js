@@ -3,8 +3,9 @@ define(function(require, exports, module) {
         return {
             status: 200,
             param: param,
+            timeout: 1000,
             data: [
-                {userid: 153, name: 'jack chen'}
+                {userid: 150, name: 'jack chen'}
             ]
         };
     };

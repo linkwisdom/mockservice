@@ -12,7 +12,7 @@ mockservice
 
 > npm install git://github.com/fcfe/mockservice.git
 
-- 选择npm安装 (最近dns还未完全恢复, npm安装可能会有问题)
+- 选择npm安装
 
 > npm install mockservice
 
@@ -41,7 +41,6 @@ mockservice
 
 - 使用edp时建议mocksrvice安装在项目代码上一级目录, 如`F://fengchao/node_modules`
 
-
 -- 使用独立mock服务器
 
 - 如使用独立服务器; 需要全局安装 `npm install mocksrvice -g`; 
@@ -56,8 +55,8 @@ mockservice
 
 ### 使用说明
 
- > 启动程序后ms自动扫描目录下所有index.js文件及符合`(GET|ADD|DEL|MOD)_xxx.js` 格式的文件;
- > `(GET|ADD|DEL|MOD)_xxx.js` 格式的文件不会立即加载；只有请求触发时会加载；且不进行缓存；
+ > 启动程序后ms自动扫描目录下所有index.js文件及符合特定规则的文件（如果需要，规则可由ms-config.js文件配置）;
+ > mock文件不会立即加载；只有请求触发时会加载；且不进行缓存；
  
  > 测试：启动edp或mock程序；浏览器中测试，或发curl请求
  
@@ -79,9 +78,18 @@ param符合严格规范的json格式
 独立mock文件命名为{pkgname}/{pathname}.js;
 
 - 对应每个接口应该指定一个响应函数；响应函数有固定参数列表(path, param)
-- index.js 文件可以定义多个接口的响应函数 (但是不建议写到index文件；除非path不符合GET/ADD/MOD/DEL形式)
+- index.js 文件可以定义多个接口的响应函数 (但是不建议写到index文件)
 - {pathname}.js 文件只能定义对应pathname的响应函数
 
+- ms-config.js 文件配置
+> ms-config.js 文件可以放到目标文件夹下；只影响当前文件夹或子文件夹下的模块
+  暂时只有两个配置项目`cache`表示是否需要缓存模块；`pathRegs`表示匹配服务规则；
+  ms-config.js不是必需的；只有默认规则不满足需要时添加该文件即可；
+
+    module.exports = {
+        "cache": false,
+        "pathRegs": [/\w+_\w+/, 'scookie', 'zebra']
+    };
 
 ------------------------
 
