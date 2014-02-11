@@ -22,7 +22,7 @@ var pathList = {};
 
 // 检查文件名是否符合接口定义规则
 function matchPath(file, regs) {
-    regs || (regs = [/\w_/]);
+    regs || (regs = [/\w+_/]);
 
     for (var i = 0; i < regs.length; i++) {
         var reg = regs[i];
@@ -74,7 +74,7 @@ function scanDir(cwd) {
             var item = file.replace('.js', '');
             if (config.cache) {
                 // 存入ws是会被缓存的模块
-                ws[item] = pathname;
+                ws[item] = require(pathname);
             } else {
                 // 存入pathList是不被缓存的模块
                 pathList[item] = pathname;
