@@ -56,6 +56,8 @@ function scanDir(cwd) {
     // 读取当前模块配置，影响子文件夹
     if (fs.existsSync(cwd + '/ms-config.js')) {
         config = require(cwd + '/ms-config.js');
+        // 如果未配置规则列表，继承上级目录配置
+        config.pathRegs || (config.pathRegs = preConfig.pathRegs);
     }
 
     var files = fs.readdirSync(cwd);
