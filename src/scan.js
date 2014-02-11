@@ -56,12 +56,14 @@ function scanDir(cwd) {
     // 读取当前模块配置，影响子文件夹
     if (fs.existsSync(cwd + '/ms-config.js')) {
         config = require(cwd + '/ms-config.js');
+        
         // 如果未配置规则列表，继承上级目录配置
         config.pathRegs || (config.pathRegs = preConfig.pathRegs);
     }
 
     var files = fs.readdirSync(cwd);
-    files.forEach(function(file) {
+    files.forEach( function (file) {
+
         // 避免引入.svn中的文件
         if (file.charAt(0) == '.') {
             return true;
@@ -75,9 +77,11 @@ function scanDir(cwd) {
         } else if (matchPath(file, config.pathRegs)) {
             var item = file.replace('.js', '');
             if (config.cache) {
+
                 // 存入ws是会被缓存的模块
                 ws[item] = require(pathname);
             } else {
+
                 // 存入pathList是不被缓存的模块
                 pathList[item] = pathname;
             }
@@ -112,7 +116,7 @@ function moduleError(path, param) {
  * @param  {string} path 请求path
  * @return {Function}    请求响应函数
  */
-exports.getResponse = function(path) {
+exports.getResponse = function (path) {
     // 先检查冷服务是否存在
     if (path in ws) {
         return ws[path];
@@ -120,6 +124,7 @@ exports.getResponse = function(path) {
 
     // 检查热服务是否存在
     if (path in pathList) {
+
         // pathList 上的模块是不缓存的；
         var fileName = pathList[path];
         if (fileName in require.cache) {
@@ -138,6 +143,7 @@ exports.getResponse = function(path) {
                 return obj;
             }
         } catch(ex) {
+
             // 预防语法错误导致模块加载失败
             console.log('module error', fileName);
             return moduleError;

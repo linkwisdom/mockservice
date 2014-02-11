@@ -28,7 +28,7 @@ var contentType = 'text/json;charset=utf-8';
 var timeoutSpan = 100;
 
 // 接受配置参数
-exports.config = function(config) {
+exports.config = function (config) {
     if (config && config.dir) {
         scan.scanDir(config.dir);
     }
@@ -40,7 +40,7 @@ function pack(obj) {
 }
 
 // 对外暴露的service接口
-exports.serve = function(request, response) {
+exports.serve = function (request, response) {
     var query= request.query; // 请求参数
     var path = query.path; //请求路径信息
     var result = {status: 200, data: null};
@@ -114,7 +114,7 @@ exports.serve = function(request, response) {
             }
 
         } catch(ex) {
-            
+
             // 如果出现脚本错误；默认发送的是500错误
             result = {
                 status: 400,
@@ -137,7 +137,7 @@ exports.serve = function(request, response) {
     }
 
     // 延迟响应请求， 默认为100ms
-    setTimeout(function() {
+    setTimeout( function () {
         // timeout 不返回到客户端
         delete result.timeout;
         response.end(pack(result));
@@ -152,11 +152,11 @@ function service(request, response) {
     if (request.method == 'POST') {
         var data = [];
 
-        request.on('data', function(trunk) {
+        request.on('data', function (trunk) {
             data.push(trunk && trunk.toString());
         });
 
-        request.on('end', function(trunk) {
+        request.on('end', function (trunk) {
             if (trunk) {
                 data.push(trunk.toString());
             }
@@ -172,17 +172,17 @@ function service(request, response) {
 }
 
 // 独立服务运行
-exports.listen = function(port) {
+exports.listen = function (port) {
     port || (port = 8181);
     require('http').createServer(service).listen(port);
     console.log('mockservice start on port:' + port);
 };
 
 // 为edp提供服务暴露接口
-exports.request = function(config) {
+exports.request = function (config) {
     var me = this;
     me.config(config);
-    return function(context) {
+    return function (context) {
         var request = context.request;
         var response = context.response;
         request.body = request.bodyBuffer;
