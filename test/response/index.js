@@ -1,5 +1,5 @@
-define(function(require, exports, module) {
-    exports.GET_book = function(path, param) {
+define(function (require, exports, module) {
+    exports.GET_book = function (path, param) {
         return {
             status: 200,
             data: [

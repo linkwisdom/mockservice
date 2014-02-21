@@ -1,5 +1,5 @@
-define(function(require, exports, module) {
-    exports.GET_auth = function(path, param) {
+define(function (require, exports, module) {
+    exports.GET_auth = function (path, param) {
         return {
             status: 200,
             data: {
@@ -9,7 +9,7 @@ define(function(require, exports, module) {
         };
     };
 
-    exports.GET_group = function(path, param) {
+    exports.GET_group = function (path, param) {
         return {
             status: 200,
             data: [

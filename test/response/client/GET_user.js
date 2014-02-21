@@ -1,5 +1,5 @@
-define(function(require, exports, module) {
-    module.exports = function(path, param) {
+define(function (require, exports, module) {
+    module.exports = function (path, param) {
         return {
             status: 200,
             param: param,
