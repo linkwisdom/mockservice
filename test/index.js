@@ -16,6 +16,11 @@ exports.request = function(config) {
 // 脱离edp直接运行mock服务
 var argv = process.argv;
 if (argv[1] == __filename) {
-    ms.config({dir: __dirname + '/response'});
+    ms.config(
+        {
+            dir: __dirname + '/response',
+            logError: {}
+        }
+    );
     ms.listen(argv[2] || 8848);
 }

@@ -86,6 +86,7 @@ param符合严格规范的json格式
   暂时只有两个配置项目`cache`表示是否需要缓存模块；`pathRegs`表示匹配服务规则；
   ms-config.js不是必需的；只有默认规则不满足需要时添加该文件即可；
 
+
     module.exports = {
         "cache": false,
         "pathRegs": [/\w+_\w+/, 'scookie', 'zebra']
