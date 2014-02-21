@@ -24,13 +24,18 @@ mockservice
     exports.port = 8848;
 
     var ms = require('mockservice');
-    ms.config({dir: __dirname + '/phoenix/debug'});
+    ms.config({
+        dir: __dirname + '/phoenix/debug',
+        logError: {
+            logFile: 'ms-erorr.log'
+        }
+    });
 
     exports.getLocations = function () {
         return [
             {
                 location: /^\/request.ajax/, 
-                handler: ms.request({})
+                handler: ms.request()
             }
         ];
     };
