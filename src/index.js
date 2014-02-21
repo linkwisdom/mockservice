@@ -31,8 +31,35 @@ var timeoutSpan = 100;
 exports.config = function (config) {
     if (config && config.dir) {
         scan.scanDir(config.dir);
+        if (config.logError) {
+            process._logError = config.logError;
+        }
     }
 };
+
+global.printError = function (exception, msg) {
+    if (!process._logError) {
+        return;
+    }
+
+    if (msg) {
+        console.log(msg);
+    }
+
+    if ('object' == typeof exception) {
+        console.log(exception.message);
+
+        // 如果指定了logFile 错误日志打印到日志文件
+        // 否则直接输出
+        if (process._logError.logfile) {
+
+        } else {
+            console.log(exception.stack);
+        }
+    }
+
+    console.log(__dirname);
+}
 
 // 封装数据
 function pack(obj) {
@@ -67,7 +94,7 @@ exports.serve = function (request, response) {
         // param 需要符合标准json格式
         try {
             param = JSON.parse(param);
-        } catch(ex) {
+        } catch (ex) {
             param = eval( '(' + param + ')');
         }
     }
@@ -108,18 +135,22 @@ exports.serve = function (request, response) {
                 // 如果返回值为空；则认为是服务端错误
                 result = {
                     timeout: 3000,
-                    data: 'service error'
+                    path: path,
+                    data: 'no result defined'
                 };
+
                 response.writeHead(500, contentType);
             }
 
-        } catch(ex) {
+        } catch (ex) {
 
             // 如果出现脚本错误；默认发送的是500错误
             result = {
-                status: 400,
-                msg: ex
+                status: 500,
+                msg: ex.message
             };
+
+            printError(ex, path);
         }
 
     } else if (proc) {
@@ -134,6 +165,8 @@ exports.serve = function (request, response) {
             status: 404,
             msg: 'service not found'
         };
+
+
     }
 
     // 延迟响应请求， 默认为100ms

@@ -142,10 +142,13 @@ exports.getResponse = function (path) {
             } else {
                 return obj;
             }
-        } catch(ex) {
-
+        } catch (ex) {
+            
             // 预防语法错误导致模块加载失败
             console.log('module error', fileName);
+
+            // 全局错误信息处理方法
+            printError(ex);
             return moduleError;
         }
     }
