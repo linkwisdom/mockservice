@@ -150,6 +150,9 @@ exports.serve = function (request, response) {
                 msg: ex.message
             };
 
+            // 设置错误状态
+            response.writeHead(result.status, contentType);
+
             printError(ex, path);
         }
 
