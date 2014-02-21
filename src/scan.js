@@ -148,7 +148,7 @@ exports.getResponse = function (path) {
             console.log('module error', fileName);
 
             // 全局错误信息处理方法
-            printError(ex);
+            printError(ex, path);
             return moduleError;
         }
     }

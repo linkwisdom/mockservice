@@ -22,7 +22,9 @@ var scan = require('./scan');
 global.require = require('beef');
 
 // 设置服务mine类型
-var contentType = 'text/json;charset=utf-8';
+var contentType = {
+    'Content-Type': 'text/json;charset=utf-8'
+};
 
 // 默认延迟时间为 100ms
 var timeoutSpan = 100;
@@ -49,16 +51,26 @@ global.printError = function (exception, msg) {
     if ('object' == typeof exception) {
         console.log(exception.message);
 
+        var logFile =  process._logError.logFile;
+
         // 如果指定了logFile 错误日志打印到日志文件
         // 否则直接输出
-        if (process._logError.logfile) {
+        if (logFile) {
+            logFile = require('path').join(process.cwd(), logFile);
 
+            var errorMSG = [
+                msg,
+                exception.stack,
+                '\n'
+            ].join('\n');
+
+            require('fs').appendFile(logFile, errorMSG, function(err) {
+                err && console.log(err);
+            });
         } else {
             console.log(exception.stack);
         }
     }
-
-    console.log(__dirname);
 }
 
 // 封装数据
