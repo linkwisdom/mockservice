@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-var ms = require('../');
+var ms = require('mockservice');
 
 function start(port, debugDir) {
     var fs = require( 'fs' );
