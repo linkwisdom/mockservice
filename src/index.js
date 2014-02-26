@@ -23,7 +23,7 @@ global.require = require('beef');
 
 // 设置服务mine类型
 var contentType = {
-    'Content-Type': 'text/json;charset=utf-8'
+    'content-type': 'application/json;charset=UTF-8'
 };
 
 // 默认延迟时间为 100ms
@@ -134,10 +134,11 @@ exports.serve = function (request, response) {
             result = proc(path, param);
 
             // 根据返回值设定http status code
-            if (result && result.status) {
+            if (result && result._status) {
 
                 // 返回正常，且有状态码
-                response.writeHead(result.status, contentType);
+                response.writeHead(result._status, contentType);
+                delete result._status;
             } else if (result) {
 
                 // 如果有数据返回但是没有status, 默认为200
@@ -146,7 +147,7 @@ exports.serve = function (request, response) {
 
                 // 如果返回值为空；则认为是服务端错误
                 result = {
-                    timeout: 3000,
+                    timeout: 1000,
                     path: path,
                     data: 'no result defined'
                 };
@@ -180,16 +181,15 @@ exports.serve = function (request, response) {
             status: 404,
             msg: 'service not found'
         };
-
-
     }
 
     // 延迟响应请求， 默认为100ms
     setTimeout( function () {
         // timeout 不返回到客户端
-        delete result.timeout;
+        delete result._timeout;
+
         response.end(pack(result));
-    }, result.timeout || timeoutSpan);
+    }, result._timeout || timeoutSpan);
 };
 
 // 独立服务运行，为了兼容edp中post数据获取方式
