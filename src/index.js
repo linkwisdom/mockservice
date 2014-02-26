@@ -240,3 +240,19 @@ exports.request = function (config) {
         context.stop();
     };
 };
+
+// export proxy only for edp
+exports.proxy = function (config) {
+    return function (context) {
+        var replace = config.replace;
+
+        if (replace && replace.source) {
+            var url = context.request.url
+            context.request.url = url.replace(replace.source, replace.target);
+        }
+
+        if (config.host) {
+            proxy(config.host, config.port || 80)(context);
+        }
+    }
+};
