@@ -5,6 +5,11 @@ exports.documentRoot = __dirname;
 var ms = require('../src/index');
 ms.config({
     dir: __dirname + '/response',
+    packages: {
+        'common': './common',
+        'client': './client',
+        'lib': './lib'
+    },
     logError: {
         logFile: 'ms-error-log'
     }
