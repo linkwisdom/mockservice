@@ -244,15 +244,18 @@ exports.request = function (config) {
 // export proxy only for edp
 exports.proxy = function (config) {
     return function (context) {
+        var request = context.request;
         var replace = config.replace;
 
         if (replace && replace.source) {
-            var url = context.request.url
-            context.request.url = url.replace(replace.source, replace.target);
+            var url = request.url
+            request.url = url.replace(replace.source, replace.target);
         }
 
         if (config.host) {
-            proxy(config.host, config.port || 80)(context);
+            config.port = config.port  || 80;
+            request.headers = config.host + ':' + config.port;
+            proxy(config.host, config.port)(context);
         }
     }
 };
