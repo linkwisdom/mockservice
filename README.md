@@ -120,6 +120,15 @@ param符合严格规范的json格式
 
 ```js
 module.exports = function (path, param) {
+
+    /**
+     * module!是beef.require支持的插件
+     * 支持基于modules x node_modules的寻址
+     */
+    var rand = require('module!rand');
+    var moment = require('module!moment');
+    var storage = require('module!moment');
+    
     return {
         status: 200, // 业务status，与http状态无关
         _status: 300, // 指定http状态； 不输出

@@ -4,9 +4,6 @@ var ms = require('../');
 exports.request = function(config) {
     config.dir = __dirname + '/response';
     ms.config(config);
-
-
-
     return function(context) {
         var request = context.request;
         var response = context.response;

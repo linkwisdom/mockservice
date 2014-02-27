@@ -1,0 +1,10 @@
+#! /usr/bin/env node
+
+var brow = require('beef').brow;
+var argv = process.argv;
+
+if (argv.length > 2) {
+    brow(argv[2], argv[3]);
+} else {
+    brow(process.cwd());
+}
