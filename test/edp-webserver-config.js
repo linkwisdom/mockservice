@@ -3,6 +3,7 @@ exports.directoryIndexes = true;
 exports.documentRoot = __dirname;
 
 var ms = require('../src/index');
+
 ms.config({
     dir: __dirname + '/response',
     packages: {
