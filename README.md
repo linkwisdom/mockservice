@@ -21,6 +21,7 @@ mockservice
 
 > 配置方法: 在edp-webserver-config文件中添加如下代码
 
+```js
     exports.port = 8848;
 
     var ms = require('mockservice');
@@ -33,12 +34,24 @@ mockservice
 
     exports.getLocations = function () {
         return [
-            {
+            { // 将特定请求转向代理
+                location: /path=GET\/nikon*/,
+                handler: ms.proxy({
+                        replace: {
+                            source: '/nirvana-workspace',
+                            target: ''
+                        },
+                        host: 'dev.liandong.org',
+                        port: 8848
+                    });
+            },
+            { // 其它请求转为本地mock
                 location: /^\/request.ajax/, 
                 handler: ms.request()
             }
         ];
     };
+```
 
 -- 启动服务器
 
@@ -91,11 +104,26 @@ param符合严格规范的json格式
   暂时只有两个配置项目`cache`表示是否需要缓存模块；`pathRegs`表示匹配服务规则；
   ms-config.js不是必需的；只有默认规则不满足需要时添加该文件即可；
 
-
+```js
     module.exports = {
         "cache": false,
         "pathRegs": [/\w+_\w+/, 'scookie', 'zebra']
     };
+```
+————————————————————————
+
+## mock数据特殊字段说明
+
+```js
+module.exports = function (path, param) {
+    return {
+        status: 200, // 业务status，与http状态无关
+        _status: 300, // 指定http状态； 不输出
+        _timeout: 1000, // 延迟发送毫秒时间；不输出
+        data: [] // 业务数据字段
+    };
+};
+```
 
 ------------------------
 
