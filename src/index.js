@@ -26,8 +26,8 @@ var contentType = {
     'content-type': 'application/json;charset=UTF-8'
 };
 
-// 默认延迟时间为 100ms
-var timeoutSpan = 100;
+// 默认延迟时间为 50ms
+var timeoutSpan = 50;
 
 // 接受配置参数
 exports.config = function (config) {
@@ -36,6 +36,13 @@ exports.config = function (config) {
         if (config.logError) {
             process._logError = config.logError;
         }
+
+        require('beef').config({
+            baseUrl: config.dir,
+            packages: config.packages
+        });
+
+        global.include = require('paw').require;
     }
 };
 
