@@ -27,17 +27,21 @@ mockservice
     var ms = require('mockservice');
     ms.config({
         dir: __dirname + '/phoenix/debug',
+
+        // 如果不写logError，则错误信息不显示输出
         logError: {
+            // 如果不指定logFile，则将错误信息输出到控制台
             logFile: 'ms-erorr.log'
         }
     });
 
+    // edp 通过getLocations 路由请求处理器
     exports.getLocations = function () {
         return [
             { // 将特定请求转向代理
-                location: /path=GET\/nikon*/,
+                location: /path=GET\/nikon/,
                 handler: ms.proxy({
-                        replace: {
+                        replace: { // 对url的替换规则
                             source: '/nirvana-workspace',
                             target: ''
                         },
