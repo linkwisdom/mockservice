@@ -26,7 +26,14 @@ mockservice
 
     var ms = require('mockservice');
     ms.config({
+        // dir 相当于定义了mock的basedir 及require的baseUrl
         dir: __dirname + '/phoenix/debug',
+        
+        // packages 定义了基于basedir的寻址方式
+        packages: {
+            'lib': './lib',
+            'manage': './manage'
+        },
 
         // 如果不写logError，则错误信息不显示输出
         logError: {
