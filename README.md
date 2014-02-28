@@ -128,13 +128,13 @@ param符合严格规范的json格式
 ```js
 module.exports = function (path, param) {
 
-    /**
-     * module!是beef.require支持的插件
-     * 支持基于modules x node_modules的寻址
-     */
-    var rand = require('module!rand');
-    var moment = require('module!moment');
-    var storage = require('module!moment');
+    // lib通过packages定义了路径
+    var rand = require('lib/rand'); 
+    
+    // include 能够通过modules/mode_modules寻址
+    // moment内置定义再mockservice/modules中
+    var moment = include('moment'); 
+    var storage = include('storage');
     
     return {
         status: 200, // 业务status，与http状态无关
