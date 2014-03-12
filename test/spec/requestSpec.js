@@ -7,6 +7,9 @@ ms.config({
 });
 ms.listen(8848);
 
+// close server 2seconds
+ms.close(2000);
+
 var testResponse = function (option, done) {
 
     option.params = JSON.stringify(option.params || {});
