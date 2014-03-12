@@ -103,19 +103,20 @@ param符合严格规范的json格式
 
 - 构造数据代码规范
 
-> 所有响应request.ajax?path={pathname}&param={object}请求每个pathname对应一个mock文件；mock文件名`/`替换为`_`；
-独立mock文件命名为{pkgname}/{pathname}.js;
+> 所有响应request.ajax?path={pathname}&param={object}请求每个pathname对应一个mock文件；
+
+> mock文件名`/`替换为`_`；
+
+> 独立mock文件命名为{pkgname}/{pathname}.js;
 
 -- 对应每个接口应该指定一个响应函数；响应函数有固定参数列表(path, param)
+
 -- index.js 文件可以定义多个接口的响应函数 (但是不建议写到index文件)
+
 -- {pathname}.js 文件只能定义对应pathname的响应函数
 
 - ms-config.js 文件配置 
 > ms-config.js 文件可以放到目标文件夹下；只影响当前文件夹或子文件夹下的模块
-
-  暂时只有两个配置项目`cache`表示是否需要缓存模块；`pathRegs`表示匹配服务规则；
-
-  ms-config.js不是必需的；只有默认规则不满足需要时添加该文件即可;
 
 > 详细配置参考 [config 详细说明](https://github.com/linkwisdom/mockservice/blob/master/docs/config.md);
 
