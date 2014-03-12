@@ -2,7 +2,7 @@
 -----------
 
 ## 安装使用
- - 参考阅读 [mockservice 安装](/linkwisdom/mockservice)
+ - 参考阅读 [mockservice 安装](https://github.com/linkwisdom/mockservice)
 
 ## 项目配置
  - [参考阅读](config.md)
