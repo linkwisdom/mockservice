@@ -1,15 +1,55 @@
-/**
- * 生成随机数据(时间、文字、数字等)
- */
-define(function(require, exports) {
+
     var ONE_DAY = 86400000; //一天的时间值
     var MAX_NUM = 1609372800000; //2020-12-31 作为默认最大数取值
 
     // 不要care下面的内容；随便取的啦
-    var CNWORDS = '作为和同学们朝夕相处的内网我们始终在默默记录着'
-            + '这一切内网的每一篇文字每一张图片每'
-            + '一条评论都是百度变得更好的一份记录';
-    CNWORDS = CNWORDS.split('');
+    var CNWORDS = [
+        '第一', '权威', '儿童', '成人', '职场',
+        '英语', '健康', '幼儿', '中学', '小学'
+    ];
+
+    // 随机字符组合，有偏差的
+    var CHARS = 'abcdefg-hijklmnopqrstu-vwxyz-'
+        + 'ABCDEFGHIG-KLMNOPQRSTU-VWXYZ-0123456789';
+
+    /**
+     * randInt 随机整数
+     * 
+     * @param  {number} min 最小取值
+     * @param  {number} max 最大取值
+     * @return {number}     返回整数
+     */
+    function randInt(min, max) {
+        min || (min = 0);
+        (max === undefined) && (max = MAX_NUM);
+        var num = Math.floor(min + Math.random() * (max - min + 1));
+        return num;
+    };
+
+    exports.int = randInt;
+
+    /**
+     * getFrom 从数组中随机选择num个元素
+     * 
+     * @param  {Arrary} source 数据源
+     * @param  {number} num 个数
+     * @return {Array}  返回数组
+     */
+    exports.getFrom = function(source, num) {
+        var len = source.length;
+
+        if (!source || len < 1) {
+            return;
+        }
+
+        var rst = [];
+
+        for (var i = 0, l = num || 1 ; i < l ; i++) {
+            var idx = randInt(0, len - 1);
+            rst.push(source[idx]);
+        }
+        return rst;
+    };
 
     /**
      * 获取随机整数
@@ -18,10 +58,25 @@ define(function(require, exports) {
      * @return {number} 随机数值
      */
     exports.number = function(min, max) {
+        return randInt(min, max);
+    };
+
+    /**
+     * 获取随机浮点数
+     * 
+     * @param  {number} min 最小取值
+     * @param  {number} max 最大取值
+     * @param {number} precise
+     * @return {number} 随机数值
+     */
+    exports.float = function (min, max, precise) {
         min || (min = 0);
-        max || (max = MAX_NUM);
-        var num = min + parseInt(Math.random() * (max - min), 10);
-        return num;
+        (max === undefined) && (max = MAX_NUM);
+        var rst = Math.random() * (max - min) + min;
+        if (precise !== undefined) {
+            rst = rst - (rst % precise);
+        }
+        return rst;
     };
 
     /**
@@ -31,8 +86,12 @@ define(function(require, exports) {
      * @return {number}       时间戳值
      */
     exports.timestamp = function(pre, after) {
-        var num = this.number(min, max);
-        var timestamp = new Date() - ONE_DAY * num;
+        var num = randInt(pre || 0, after || 0);
+
+        var timestamp = +(new Date()) + ONE_DAY * num;
+
+        console.log(num);
+
         return (timestamp).toString(10);
     };
 
@@ -46,9 +105,8 @@ define(function(require, exports) {
     exports.formatDate = function(pre, after, format) {
         var moment = require('./moment');
         format || (format = 'YYYY-MM-DD');
-        var diff = this.number(pre, after) * ONE_DAY;
-        var day = (+new Date()) + diff;
-        return moment.utc(day).format(format);
+        var timestamp = +this.timestamp(pre, after);
+        return moment.utc(timestamp).format(format);
     };
 
     /**
@@ -56,16 +114,49 @@ define(function(require, exports) {
      * @param  {number} num 字符长度
      * @return {string} 随机中文字符串
      */
-    exports.chars = function(num) {
-        var len = CNWORDS.length;
-        num = this.number(1, num);
+    exports.words = function(min, max, WORDS) {
+        if (min instanceof Array) {
+            WORDS = min;
+            min = max = 1;
+        } else if (max instanceof Array) {
+            WORDS = max;
+            max = min;
+        }
+
+        WORDS = WORDS || CNWORDS;
+        var len = WORDS.length;
+        var num = randInt(min, max || min);
         var rst = [];
+        var count = 0;
         
-        for (var i = 0; i < num && rst.length < num; i++) {
-            var idx = this.number(0, len - 4);
-            rst = rst.concat(CNWORDS.slice(idx, idx + 3));
+        for (var i = 0; i < num && count < num; i++) {
+            var idx = randInt(0, len - 1);
+            count += WORDS[idx].length;
+            if (count <= num) {
+                rst = rst.concat(WORDS[idx]);
+            } else {
+                rst = rst.concat(WORDS[idx].slice(0, count - num));
+                break;
+            }
         }
         return rst.join('');
     };
 
-});
+    /**
+     * 随机英文字符
+     * 
+     * @param  {number} min 最小长度取值
+     * @param  {number} max 最大长度取值
+     * @return {string}     返回英文字符
+     */
+    exports.chars = function(min, max) {
+        return this.words(min, max, CHARS);
+    };
+
+    // console.log(exports.formatDate(-10, 10, 'YYYY年MM月DD日'));
+    // console.log(exports.chars(['关键词', '计划' , '单元']));
+    // console.log(exports.chars(30, 50));
+    // console.log(exports.getFrom(['关键词', '计划' , '单元'], 30).join(','));
+    // console.log(exports.number(1, 2));
+    // console.log(exports.float(10, 20, 0.01));
+

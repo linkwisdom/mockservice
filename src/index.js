@@ -32,7 +32,13 @@ var timeoutSpan = 50;
 // 接受配置参数
 exports.config = function (config) {
     if (config && config.dir) {
-        scan.scanDir(config.dir);
+        var custom = scan.scanDir(config.dir);
+
+        // 合并配置信息
+        for (var item in custom) {
+            config[item] = custom[item];
+        }
+
         if (config.logError) {
             process._logError = config.logError;
         }
@@ -92,7 +98,7 @@ exports.serve = function (request, response) {
     var result = {status: 200, data: null};
 
     // 支持param和params两种参数接口
-    var param = query.param || query.params;
+    var param = query.param || query.params || {};
 
     // 如果是post过来的请求
     if (request.body) {

@@ -5,17 +5,29 @@ define(function(require, exports, module) {
     var collection = {};
 
     var db = {
-        'default': collection
+        global: collection
+    };
+
+    exports.init = function (data) {
+
+        for (var item in data) {
+            db[item] = data[item];
+            this.define(item);
+        }
+
+        collection = db.global || {};
+        return collection;
     };
 
     // 获取值
     exports.get = function(key) {
-        return collection[key];
+        return key? collection[key]: collection;
     };
 
     // 指定值
     exports.set = function(key, value) {
         collection[key] = value;
+        return collection;
     };
 
     // 切换数据集合
@@ -34,7 +46,7 @@ define(function(require, exports, module) {
     exports.define = function(name) {
         this.__defineGetter__(name, function() {
             collection = db[name];
-            return exports;
+            return collection;
         });
     };
 });

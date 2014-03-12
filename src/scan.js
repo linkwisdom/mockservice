@@ -56,6 +56,8 @@ function scanDir(cwd) {
     // 读取当前模块配置，影响子文件夹
     if (fs.existsSync(cwd + '/ms-config.js')) {
         config = require(cwd + '/ms-config.js');
+
+        config.customize = true;
         
         // 如果未配置规则列表，继承上级目录配置
         config.pathRegs || (config.pathRegs = preConfig.pathRegs);
@@ -88,8 +90,12 @@ function scanDir(cwd) {
         }
     });
 
-    // 恢复配置
+    var custom = config;
+
     config = preConfig;
+
+    // 返回配置信息
+    return custom || config || {};
 }
 
 // 暴露扫描接口
