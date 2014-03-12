@@ -235,8 +235,17 @@ function service(request, response) {
 // 独立服务运行
 exports.listen = function (port) {
     port || (port = 8181);
-    require('http').createServer(service).listen(port);
+    this._server = require('http').createServer(service);
+    this._server.listen(port);
     console.log('mockservice start on port:' + port);
+};
+
+exports.close = function (millies) {
+    var server = this._server;
+    console.log('mockservice stoping...');
+    setTimeout(function() {
+        server.close();
+    }, millies || 10000);
 };
 
 // 为edp提供服务暴露接口
