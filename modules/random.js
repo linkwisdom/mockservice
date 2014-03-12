@@ -134,6 +134,8 @@
             count += WORDS[idx].length;
             if (count <= num) {
                 rst = rst.concat(WORDS[idx]);
+            } else if (arguments[0] instanceof Array) {
+                rst = rst.concat(WORDS[idx]);
             } else {
                 rst = rst.concat(WORDS[idx].slice(0, count - num));
                 break;

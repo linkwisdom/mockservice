@@ -32,11 +32,11 @@
 
     var source = ['计划', '单元', '关键词'];
 
-    random.chars(100); // 生成随机英文、数字字符100个
-    random.chars(20, 100); // 生成随机英文、数字字符 20-100个
-    random.words(source); // 从source中随机取值1次
-    random.words(10, source) // 从source中随机取值10次组合字符串
-    random.words(10, 20, source) // 从source中随机取值10-20次组合字符串
+    random.chars(100); // 生成随机英文、数字字符串；长度为100
+    random.chars(20, 100); // 生成随机英文、数字字符串，长度为20-100
+    random.words(source); // 从source中随机取值1次；长度取决source单词长度
+    random.words(10, source) // 从source中随机取值字符串；长度为10
+    random.words(10, 20, source) // 从source中随机取值组合字符串；长度为10-10
 ```
 
 ### 随机数组摘取
