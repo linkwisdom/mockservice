@@ -125,6 +125,8 @@
             max = min;
         }
 
+        (arg1 === undefined) || (min = max = 1);
+
         WORDS = WORDS || CNWORDS;
         var len = WORDS.length;
         var num = randInt(min, max || min);
