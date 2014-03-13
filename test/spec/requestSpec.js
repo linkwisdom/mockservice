@@ -7,8 +7,8 @@ ms.config({
 });
 ms.listen(8848);
 
-// close server 2seconds
-ms.close(2000);
+// close server N seconds
+ms.close(3500);
 
 var testResponse = function (option, done) {
 
@@ -65,6 +65,18 @@ describe('jasmine-node', function () {
                 key: false,
                 value: 'ok'
             }, done);
+    }, 4000);
+
+    it('should respond with hospital information', function (done) {
+        testResponse({
+            path: 'GET/hospital',
+            params: {hospitalId: 1000},
+            validate: function (data) {
+                expect(data.info).not.toBeNull();
+                expect(data.info.id).toBe(1000);
+                expect(data.creative.length).toBeGreaterThan(10);
+            }
+        }, done);
     }, 4000);
 
     it('should respond with fcfe', function (done) {

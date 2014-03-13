@@ -23,8 +23,8 @@ describe('jasmine-node', function () {
         // 从默认数组中获取长度为12 - 15的中文字符串
         expect(random.words(12, 15).length).not.toBeGreaterThan(15);
 
-        // 单独数组参数，表示从中取值一次
-        expect(random.words(source).length).toBe(1);
+        // 单独数组参数，表示从中取值一个单词
+        expect(random.words(source).length).toBe(2);
 
         // 从源中产生长度为15的随机字符串
         expect(random.words(15, source).length).toBe(15);
