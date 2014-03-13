@@ -115,6 +115,8 @@
      * @return {string} 随机中文字符串
      */
     exports.words = function(min, max, WORDS) {
+        var arg1 = arguments[0];
+
         if (min instanceof Array) {
             WORDS = min;
             min = max = 1;
@@ -134,8 +136,9 @@
             count += WORDS[idx].length;
             if (count <= num) {
                 rst = rst.concat(WORDS[idx]);
-            } else if (arguments[0] instanceof Array) {
+            } else if (arg1 instanceof Array) {
                 rst = rst.concat(WORDS[idx]);
+                break;
             } else {
                 rst = rst.concat(WORDS[idx].slice(0, count - num));
                 break;
