@@ -62,7 +62,8 @@ global.printError = function (exception, msg) {
     }
 
     if ('object' == typeof exception) {
-        console.log(exception.message);
+        // console log message in darkred
+        console.log('\033[31m \033[05m ', exception.message, '\033[0m');
 
         var logFile =  process._logError.logFile;
 
