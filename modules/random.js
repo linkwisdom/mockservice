@@ -90,8 +90,6 @@
 
         var timestamp = +(new Date()) + ONE_DAY * num;
 
-        console.log(num);
-
         return (timestamp).toString(10);
     };
 
@@ -123,26 +121,29 @@
         } else if (max instanceof Array) {
             WORDS = max;
             max = min;
-        }
+        } else if (arg1 === undefined) {
+            min = max = 1 
+        };
 
-        (arg1 === undefined) || (min = max = 1);
+
 
         WORDS = WORDS || CNWORDS;
         var len = WORDS.length;
         var num = randInt(min, max || min);
         var rst = [];
         var count = 0;
-        
+       
         for (var i = 0; i < num && count < num; i++) {
             var idx = randInt(0, len - 1);
             count += WORDS[idx].length;
+
             if (count <= num) {
                 rst = rst.concat(WORDS[idx]);
             } else if (arg1 instanceof Array) {
                 rst = rst.concat(WORDS[idx]);
                 break;
             } else {
-                rst = rst.concat(WORDS[idx].slice(0, count - num));
+                rst = rst.concat(WORDS[idx].slice(0, num - count + WORDS[idx].length));
                 break;
             }
         }
@@ -161,9 +162,10 @@
     };
 
     // console.log(exports.formatDate(-10, 10, 'YYYY年MM月DD日'));
-    // console.log(exports.chars(['关键词', '计划' , '单元']));
     // console.log(exports.chars(30, 50));
     // console.log(exports.getFrom(['关键词', '计划' , '单元'], 30).join(','));
     // console.log(exports.number(1, 2));
-    // console.log(exports.float(10, 20, 0.01));
+    // console.log(exports.float(10, 20, 0.01));  
+    // console.log(exports.words(10, ['关键词', '本月推' , '单元']).length);
+    // console.log(exports.int(2, 2));
 
