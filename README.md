@@ -1,4 +1,5 @@
-mockservice
+mockservice [![NPM version](https://badge.fury.io/js/mockservice.png)](https://npmjs.org/package/mockservice) [![Dependencies Status](https://david-dm.org/linkwisdom/mockservice.png)](https://david-dm.org/linkwisdom/mockservice)
+[![Build Status](https://travis-ci.org/mockserivce/mockservice.png?branch=master)](https://travis-ci.org/mockservice/mockservice)
 ===========
 
 > 构造数据服务
