@@ -3,7 +3,6 @@ mockservice
 
 > 构造数据服务
 
-
 ---------------------------
 
 ## 安装与配置
@@ -27,19 +26,7 @@ mockservice
     var ms = require('mockservice');
     ms.config({
         // dir 相当于定义了mock的basedir 及require的baseUrl
-        dir: __dirname + '/phoenix/debug',
-        
-        // packages 定义了基于basedir的寻址方式
-        packages: {
-            'lib': './lib',
-            'manage': './manage'
-        },
-
-        // 如果不写logError，则错误信息不显示输出
-        logError: {
-            // 如果不指定logFile，则将错误信息输出到控制台
-            logFile: 'ms-erorr.log'
-        }
+        dir: __dirname + '/phoenix/debug'
     });
 
     // edp 通过getLocations 路由请求处理器
@@ -85,18 +72,18 @@ mockservice
 ### 使用说明
 
  > 启动程序后ms自动扫描目录下所有index.js文件及符合特定规则的文件（如果需要，规则可由ms-config.js文件配置）;
+ 
  > mock文件不会立即加载；只有请求触发时会加载；且不进行缓存；
  
  > 测试：启动edp或mock程序；浏览器中测试，或发curl请求
  
      http://localhost:8848/request.ajax?path=GET/auth&param={}
      
-
 -----------------------
 
 ## 构造mock数据规范
 
--请求规范
+- 请求规范
 
 > 前端代码发送真实请求；请求路径符合request.ajax?path=XXX形式;参数param可以是POST或GET参数
 param符合严格规范的json格式
@@ -122,47 +109,98 @@ param符合严格规范的json格式
 
 ```js
     module.exports = {
-        "cache": false,
-        "pathRegs": [/\w+_\w+/, 'scookie', 'zebra']
+        // mock接口文件是否缓存
+        cache: false,
+        
+        // 接口匹配规则
+        pathRegs: [/\w+_\w+/, 'scookie', 'zebra'],
+        
+        // 以下配置只在baseDir中有效
+        // packages 定义了基于basedir的寻址方式
+        packages: {
+            'lib': './lib',
+            'tpl': './template'
+        },
+        // 如果不写logError，则错误信息不显示输出
+        logError: {
+            // 如果不指定logFile，则将错误信息输出到控制台
+            logFile: 'ms-erorr.log'
+        }
     };
 ```
 ————————————————————————
 
-## mock数据特殊字段说明
+## mock文件示例
 
 ```js
+// mock 的用法参考./test的文件
+
 module.exports = function (path, param) {
 
-    // lib通过packages定义了路径
-    var rand = require('lib/rand'); 
+    // tpl在packages定义了路径
+    var tpl = require('tpl/hospital');
     
-    // include 能够通过modules/mode_modules寻址
-    // moment内置定义再mockservice/modules中
-    var moment = include('moment'); 
-    var storage = include('storage');
+    // lib/mendb是基于menset概念设计(未完全实现）
+    var db = require('lib/mendb');
     
+    /**
+     * include 是mockservice内置的包导入函数；用于加载node模块
+     * moment, random, template 为支持mockservice内置的组件
+     */
+    var moment = include('moment');  // 时间格式化组件
+    var random = include('random');  // 随机数据产生器
+    var template = include('template'); // 基于etpl的模板解析引擎 
+    
+    /**
+     * 因为采用的是menset设计，因此直接赋值相当于改变了数据集
+     * db 支持数据集的增删改查
+     */
+    var hospital = db.hospital.find({id: param.hospitalId});
+    // 修改hospital的访问量
+    hospital.visitCount++;
+    
+    // 业务数据
+    var data = {
+        timestamp: random.timestamp(),
+        title: tpl.title(hospital),
+        creative: tpl.creative({
+            id: hospital.id,
+            name: hospital.name,
+            city: random.words(hospital.cities), // 随机选择国内城市
+            section: random.words(hospital.sections) // 随机选择医院科室
+        });
+     };
+    
+    // 返回数据
     return {
         status: 200, // 业务status，与http状态无关
         _status: 300, // 指定http状态； 不输出
         _timeout: 1000, // 延迟发送毫秒时间；不输出
-        data: [] // 业务数据字段
+        data: data
     };
 };
+
+// 注意db相关的功能尚在完善与测试中；暂不要在业务中使用
 ```
 
 ## 扩展modules 说明
-> 扩展的modules是为了更好的支持mock数据的生成； 所有的modules通过include(modulename)既可以获取到；
-mockservice; 内置了以下通用mock支持组件
+> 扩展的modules是为了更好的支持mock数据的生成；
+
+> 所有的modules通过include(modulename)既可以获取到；
+
+> mockservice; 内置了以下通用mock支持组件
 
 - random : 产生随机数据 
-> [说明文档](https://github.com/linkwisdom/mockservice/blob/master/docs/random.md)
+> [random 说明文档](https://github.com/linkwisdom/mockservice/blob/master/docs/random.md)
 
 - storage : 数据增删改查操作支持
-> [说明文档](https://github.com/linkwisdom/mockservice/blob/master/docs/storage.md)
+> [storage 说明文档](https://github.com/linkwisdom/mockservice/blob/master/docs/storage.md)
 
 - template : 采用的是etpl解析引擎，方便模板化产生数据
-> [说明文档](https://github.com/linkwisdom/mockservice/blob/master/docs/template.md)
+> [template 说明文档](https://github.com/linkwisdom/mockservice/blob/master/docs/template.md)
 
+- moment : 基于moment.js时间格式化组件（无多国语言包）
+> [moment 中文](http://momentjs.cn/docs/)
 
 ------------------------
 
