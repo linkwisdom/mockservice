@@ -162,7 +162,7 @@ module.exports = function (path, param) {
      * 因为采用的是menset设计，因此直接赋值相当于改变了数据集
      * db 支持数据集的增删改查
      */
-    var hospital = db.hospital.find({id: param.hospitalId});
+    var hospital = db.hospital.find({id: param.hospitalId})[0];
     // 修改hospital的访问量
     hospital.visitCount++;
     
@@ -175,7 +175,7 @@ module.exports = function (path, param) {
             name: hospital.name,
             city: random.words(hospital.cities), // 随机选择国内城市
             section: random.words(hospital.sections) // 随机选择医院科室
-        });
+        })
      };
     
     // 返回数据
@@ -188,6 +188,7 @@ module.exports = function (path, param) {
 };
 
 // 注意db相关的功能尚在完善与测试中；暂不要在业务中使用
+// 以上代码参考 test/response/GET_hospital.js
 ```
 
 ## 扩展modules 说明
