@@ -9,8 +9,8 @@ define(function (require, exports, module) {
         cache: false,  // 是否缓存
 
         // 接口名匹配规则
-        // pathRegs: [/\w+_\w+/, 'scookie', 'zebra'],
-
+        pathRegs: [/\w+_\w+/, 'scookie', 'zebra'],
+        
         // 错误日志输出，打印或输出到文件
         logError: {
             logFile: 'ms-error-log'
@@ -18,10 +18,10 @@ define(function (require, exports, module) {
 
         // 包路径配置
         packages: {
-            'common': './common',
-            'client': './client',
-            'template': './template',
-            'lib': './lib'
+            common: './common',
+            client: './client',
+            template: './template',
+            lib: './lib'
         }
     };
 });
