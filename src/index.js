@@ -49,6 +49,13 @@ exports.config = function (config) {
         });
 
         global.include = require('paw').require;
+
+         // 增加debugger 入口；方便mock调试
+        process.argv.forEach(function (item) {
+            if (item == '--debug') {
+                process._debugProcess(process.pid);
+            }
+        });
     }
 };
 
@@ -85,7 +92,7 @@ global.printError = function (exception, msg) {
             console.log(exception.stack);
         }
     }
-}
+};
 
 // 封装数据
 function pack(obj) {
@@ -271,7 +278,7 @@ exports.proxy = function (config) {
         var replace = config.replace;
 
         if (replace && replace.source) {
-            var url = request.url
+            var url = request.url;
             request.url = url.replace(replace.source, replace.target);
         }
 
@@ -280,5 +287,5 @@ exports.proxy = function (config) {
             request.headers = config.host + ':' + config.port;
             proxy(config.host, config.port)(context);
         }
-    }
+    };
 };

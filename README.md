@@ -213,12 +213,18 @@ module.exports = function (path, param) {
 
 ------------------------
 
+### 调试
+
+- 在执行参数列表中出现 `--debug` 字段，即可进入调试模式；
+- 为方便调试，建议安装node-inspector；即 `npm install node-inspector -g`
+
+```bash
+    
+    # edp 环境调试
+    edp ws start --debug
+```
+
+
 ### ISSUE todo
 
 - 构造数据支持简单物料读写逻辑
-
-- 构造数据模版
-
-- 构造数据工具方法
-
-- 构造数据规范
