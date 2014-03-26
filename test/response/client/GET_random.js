@@ -1,6 +1,7 @@
 /**
  * @file 测试随机数据产生模块
- *
+ * 
+ * @author Liandong Liu (liuliandong01@baidu.com)
  */
 define(function (require, exports, module) {
     var random = include('random');

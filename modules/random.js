@@ -1,14 +1,28 @@
+/**
+ * @file 不同类型随机数产生器
+ *
+ * @author Liandong Liu (liuliandong01@baidu.com)
+ */
 
 var ONE_DAY = 86400000; //一天的时间值
 var MAX_NUM = 1609372800000; //2020-12-31 作为默认最大数取值
 
-// 不要care下面的内容；随便取的啦
-var CNWORDS = [
+/**
+ * 随机中文字符串，建议用户用户自己指定随机数组
+ * 
+ * @inner
+ * @type {Array}
+ */
+var CN_WORDS = [
     '第一', '权威', '儿童', '成人', '职场',
     '英语', '健康', '幼儿', '中学', '小学'
 ];
 
-// 随机字符组合，有偏差的
+/**
+ * 有偏差的随机英文随机字符组合
+ * 
+ * @type {String}
+ */
 var CHARS = 'abcdefg-hijklmnopqrstu-vwxyz-'
     + 'ABCDEFGHIG-KLMNOPQRSTU-VWXYZ-0123456789';
 
@@ -18,6 +32,7 @@ var CHARS = 'abcdefg-hijklmnopqrstu-vwxyz-'
  * @param  {number} min 最小取值
  * @param  {number} max 最大取值
  * @return {number}     返回整数
+ * @private
  */
 function randInt(min, max) {
     min || (min = 0);
@@ -26,6 +41,12 @@ function randInt(min, max) {
     return num;
 };
 
+/**
+ * 随机整数
+ * 
+ * @type {function}
+ * @public
+ */
 exports.int = randInt;
 
 /**
@@ -34,14 +55,11 @@ exports.int = randInt;
  * @param  {Arrary} source 数据源
  * @param  {number} num 个数
  * @return {Array}  返回数组
+ * @public
  */
-exports.getFrom = function(source, num) {
+exports.getFrom = function (source, num) {
+    source || (source = CN_WORDS);
     var len = source.length;
-
-    if (!source || len < 1) {
-        return;
-    }
-
     var rst = [];
 
     for (var i = 0, l = num || 1 ; i < l ; i++) {
@@ -56,8 +74,9 @@ exports.getFrom = function(source, num) {
  * @param  {number} min 最小取值
  * @param  {number} max 最大取值
  * @return {number} 随机数值
+ * @public
  */
-exports.number = function(min, max) {
+exports.number = function (min, max) {
     return randInt(min, max);
 };
 
@@ -68,6 +87,7 @@ exports.number = function(min, max) {
  * @param  {number} max 最大取值
  * @param {number} precise 数值精度0-20
  * @return {number} 随机数值
+ * @public
  */
 exports.float = function (min, max, precise) {
     min || (min = 0);
@@ -84,8 +104,9 @@ exports.float = function (min, max, precise) {
  * @param  {number} pre   当前时间之前多少天
  * @param  {number} after 当前时间之后多少天
  * @return {number}       时间戳值
+ * @public
  */
-exports.timestamp = function(pre, after) {
+exports.timestamp = function (pre, after) {
     var num = randInt(pre || 0, after || 0);
 
     var timestamp = +(new Date()) + ONE_DAY * num;
@@ -99,54 +120,65 @@ exports.timestamp = function(pre, after) {
  * @param  {number} after 当前时间之后多少天
  * @param  {string} format 时间格式
  * @return {number} 格式化时间
+ * @public
  */
-exports.formatDate = function(pre, after, format) {
-    var moment = require('./moment');
+exports.formatDate = function (pre, after, format) {
+    var moment = require('moment');
     format || (format = 'YYYY-MM-DD');
     var timestamp = +this.timestamp(pre, after);
     return moment.utc(timestamp).format(format);
 };
 
 /**
- * 获得随机中文字符
- * @param  {number} num 字符长度
- * @return {string} 随机中文字符串
+ * 获得随机字符串
+ * - 长度按utf8长度计算，单个中英文字符长度均为1，
+ * 
+ * @param  {?number} min 字符最小长度
+ * @param  {?number} max 字符最大长度
+ * @param  {?Arrary|string} source 字符最小长度
+ * @return {string} 随机字符串
+ * @public
  */
-exports.words = function(min, max, WORDS) {
+exports.words = function (min, max, source) {
     var arg1 = arguments[0];
 
+    // 如果第一个参数是数组，则视为source
     if (min instanceof Array) {
-        WORDS = min;
+        source = min;
         min = max = 1;
+
+    // 否则如果第二个参数为数组，则视为source
     } else if (max instanceof Array) {
-        WORDS = max;
+        source = max;
         max = min;
+
+    // 如果第一个参数未定义，默认返回一个单词
     } else if (arg1 === undefined) {
         min = max = 1 
     };
 
-
-
-    WORDS = WORDS || CNWORDS;
-    var len = WORDS.length;
+    source = source || CN_WORDS;
+    var len = source.length;
     var num = randInt(min, max || min);
     var rst = [];
     var count = 0;
    
     for (var i = 0; i < num && count < num; i++) {
         var idx = randInt(0, len - 1);
-        count += WORDS[idx].length;
+        count += source[idx].length;
 
         if (count <= num) {
-            rst = rst.concat(WORDS[idx]);
+            rst = rst.concat(source[idx]);
         } else if (arg1 instanceof Array) {
-            rst = rst.concat(WORDS[idx]);
+            rst = rst.concat(source[idx]);
             break;
         } else {
-            rst = rst.concat(WORDS[idx].slice(0, num - count + WORDS[idx].length));
+            rst = rst.concat(source[idx].slice(0, num - count + source[idx].length));
             break;
         }
     }
+
+    // 拼接字符串
     return rst.join('');
 };
 
@@ -156,7 +188,8 @@ exports.words = function(min, max, WORDS) {
  * @param  {number} min 最小长度取值
  * @param  {number} max 最大长度取值
  * @return {string}     返回英文字符
+ * @public
  */
-exports.chars = function(min, max) {
+exports.chars = function (min, max) {
     return this.words(min, max, CHARS);
 };

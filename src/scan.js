@@ -1,9 +1,10 @@
 /**
  * @file 扫描目标文件夹；将文件夹下所有符合匹配规则的文件加入服务列表
- * @author  liandong (liu@liandong.org liuliandong01@baidu.com)
  * 
- * - 加入ws列表的为冷服务，运行期间修改无效
- * - 加入pathList列表的为热服务，运行期间修改即时生效
+ * @author  Liandong Liu (liuliandong01@baidu.com)
+ * 
+ * - 加入staticList列表的为冷服务，运行期间修改无效
+ * - 加入dynamicList列表的为热服务，运行期间修改即时生效
  *
  * 除index.js文件中定义的服务；独立mock文件中的服务不会预先加载；
  * mock文件中的语法错误和运行时错误不会停止服务；
@@ -14,17 +15,35 @@ var fs = require('fs');
 var path = require('path');
 var config = require('./config');
 
-// `冷服务`缓存; index.js中定义的服务; 支持缓存的服务
-var ws = {};
+/**
+ * `冷服务`列表; 支持缓存的服务
+ * 
+ * - index.js中定义的服务都为冷服务
+ * - 通过模块配置cache=true的模块
+ * 
+ * @inner
+ * @type {Object}
+ */
+var staticList = {};
 
-// `热服务`寻址映射路径
-var pathList = {};
+/**
+ * `热服务`列表；不缓存，每次请求都会更新
+ * 
+ * @inner
+ * @type {Object}
+ */
+var dynamicList = {};
 
-// 检查文件名是否符合接口定义规则
+/**
+ * 检查文件名是否符合接口定义规则
+ * @param  {string} file 文件名
+ * @param  {?RegExp|string} regs 正则表达式或字符串
+ * @return {boolean}      是否匹配
+ */
 function matchPath(file, regs) {
     regs || (regs = [/\w+_/]);
 
-    for (var i = 0; i < regs.length; i++) {
+    for (var i = 0, l = regs.length; i < l; i++) {
         var reg = regs[i];
         if ('string' == typeof reg) {
             if (file.indexOf(reg) > -1) {
@@ -34,13 +53,14 @@ function matchPath(file, regs) {
             return true;
         }
     }
-
     return false;
 }
 
 /**
  * 递归扫描目标目录
+ * 
  * @param  {string} cwd 当前目标目录
+ * @return {Object} 当前目录的配置
  */
 function scanDir(cwd) {
     // preConfig 是上级目录的配置
@@ -49,14 +69,13 @@ function scanDir(cwd) {
     if (fs.existsSync(cwd + '/index.js')) {
         var pkg = require(cwd + '/index.js');
         for (var item in pkg) {
-            ws[item] = pkg[item];
+            staticList[item] = pkg[item];
         }
     }
 
     // 读取当前模块配置，影响子文件夹
     if (fs.existsSync(cwd + '/ms-config.js')) {
         config = require(cwd + '/ms-config.js');
-
         config.customize = true;
         
         // 如果未配置规则列表，继承上级目录配置
@@ -80,31 +99,34 @@ function scanDir(cwd) {
             var item = file.replace('.js', '');
             if (config.cache) {
 
-                // 存入ws是会被缓存的模块
-                ws[item] = require(pathname);
+                // 存入staticList是会被缓存的模块
+                staticList[item] = require(pathname);
             } else {
 
-                // 存入pathList是不被缓存的模块
-                pathList[item] = pathname;
+                // 存入dynamicList是不被缓存的模块
+                dynamicList[item] = pathname;
             }
         }
     });
 
     var custom = config;
-
     config = preConfig;
 
     // 返回配置信息
     return custom || config || {};
 }
 
-// 暴露扫描接口
+/**
+ * 暴露扫描文件接口
+ * 
+ * @type {function}
+ */
 exports.scanDir = scanDir;
 
 /**
  * 模块加载错误提示信息
  * @param  {string} path  请求path
- * @param  {Object} param 请求参数
+ * @param  {?Object} param 请求参数
  * @return {Object}       返回数据
  */
 function moduleError(path, param) {
@@ -120,19 +142,19 @@ function moduleError(path, param) {
 /**
  * 获得响应服务函数
  * @param  {string} path 请求path
- * @return {Function}    请求响应函数
+ * @return {function}    请求响应函数
  */
 exports.getResponse = function (path) {
     // 先检查冷服务是否存在
-    if (path in ws) {
-        return ws[path];
+    if (path in staticList) {
+        return staticList[path];
     }
 
     // 检查热服务是否存在
-    if (path in pathList) {
+    if (path in dynamicList) {
 
-        // pathList 上的模块是不缓存的；
-        var fileName = pathList[path];
+        // dynamicList 上的模块是不缓存的；
+        var fileName = dynamicList[path];
         if (fileName in require.cache) {
             delete require.cache[fileName];
         }

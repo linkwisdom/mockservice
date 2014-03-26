@@ -1,3 +1,7 @@
+/**
+ * @file 测试医院
+ * @author Liandong Liu (liuliandong01@baidu.com)
+ */
 define(function (require, exports, module) {
     var db = require('lib/db');
     var tpl = require('template/hospital');

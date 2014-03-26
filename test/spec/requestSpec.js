@@ -57,48 +57,5 @@ describe('jasmine-node', function () {
                 value: true
             }, done);
     }, 4000);
-
-    it('should respond with data == ok', function (done) {
-        testResponse({
-                path: 'GET/storage',
-                params: {},
-                key: false,
-                value: 'ok'
-            }, done);
-    }, 4000);
-
-    it('should respond with hospital information', function (done) {
-        testResponse({
-            path: 'GET/hospital',
-            params: {hospitalId: 1000},
-            validate: function (data) {
-                expect(data.info).not.toBeNull();
-                expect(data.info.id).toBe(1000);
-                expect(data.creative.length).toBeGreaterThan(10);
-            }
-        }, done);
-    }, 4000);
-
-    it('should respond with fcfe', function (done) {
-        testResponse({
-                path: 'scookie',
-                params: {},
-                key: false,
-                value: 'fcfe'
-            }, done);
-    }, 5000);
-
-    it('should respond with data with title, creative and planname',
-        function(done) {
-            testResponse({
-                path: 'GET/template',
-                params: {},
-                validate: function (data) {
-                    expect(data.title).not.toBeNull();
-                    expect(data.creative).not.toBeNull();
-                    expect(data.planname).toMatch(/\w+/);
-                }
-            }, done);
-        }, 6000);
 });
 

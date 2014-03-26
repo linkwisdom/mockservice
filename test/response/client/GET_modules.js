@@ -1,3 +1,8 @@
+/**
+ * @file 测试模块加载
+ * 
+ * @author Liandong Liu (liuliandong01@baidu.com)
+ */
 define(function (require, exports, module) {
 
     // 测试pacakge配置是否正确
