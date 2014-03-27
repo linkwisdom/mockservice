@@ -3,10 +3,10 @@ var random = require('../../modules/random');
 describe('jasmine-node', function () {
 
     it('test get random number', function () {
-        expect(random.int(12, 15)).not.toBeGreaterThan(15);
-        expect(random.int(12, 15)).not.toBeLessThan(12);
-        expect(random.float(12, 15, 0.01)).not.toBeGreaterThan(15);
-        expect(random.float(12, 15, 0.01)).toBeLessThan(16);
+        expect(random.number(12, 15)).not.toBeGreaterThan(15);
+        expect(random.number(12, 15)).not.toBeLessThan(12);
+        expect(random.floatNumber(12, 15, 0.01)).not.toBeGreaterThan(15);
+        expect(random.floatNumber(12, 15, 0.01)).toBeLessThan(16);
     });
 
     it('test get random strings', function () {

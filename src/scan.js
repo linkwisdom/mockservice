@@ -45,10 +45,8 @@ function matchPath(file, regs) {
 
     for (var i = 0, l = regs.length; i < l; i++) {
         var reg = regs[i];
-        if ('string' == typeof reg) {
-            if (file.indexOf(reg) > -1) {
-                return true;
-            }
+        if ( ('string' == typeof reg ) && ( file.indexOf(reg) > -1 ) ) {
+            return true;
         } else if (file.match(reg)) {
             return true;
         }
@@ -83,7 +81,7 @@ function scanDir(cwd) {
     }
 
     var files = fs.readdirSync(cwd);
-    files.forEach( function (file) {
+    files.forEach(function (file) {
 
         // 避免引入.svn中的文件
         if (file.charAt(0) == '.') {
@@ -146,16 +144,16 @@ function moduleError(path, param) {
  */
 exports.getResponse = function (path) {
     // 先检查冷服务是否存在
-    if (path in staticList) {
+    if (staticList.hasOwnProperty(path)) {
         return staticList[path];
     }
 
     // 检查热服务是否存在
-    if (path in dynamicList) {
+    if (dynamicList.hasOwnProperty(path)) {
 
         // dynamicList 上的模块是不缓存的；
         var fileName = dynamicList[path];
-        if (fileName in require.cache) {
+        if (require.cache.hasOwnProperty(fileName)) {
             delete require.cache[fileName];
         }
 
@@ -165,7 +163,7 @@ exports.getResponse = function (path) {
             obj = require(fileName);
             if ('function' == typeof obj) {
                 return obj;
-            } else if (obj && path in obj) {
+            } else if (obj && obj.hasOwnProperty(path)) {
                 return obj[path];
             } else {
                 return obj;

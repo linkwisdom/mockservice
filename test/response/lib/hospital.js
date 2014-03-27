@@ -1,8 +1,9 @@
 /**
- * @file 测试index文件
- * 
- * 本文件是为了实现menset设计的过度文件；
- * 
+ * @file lib/hospital
+ * - 产生医院类物料信息
+ * - 本文件是为了实现menset设计的过渡文件；
+ *
+ * @author Liandong Liu (liuliandong01@baidu.com)
  */
 define(function (require, exports, module) {
     var random = include('random');
@@ -10,19 +11,21 @@ define(function (require, exports, module) {
     var sections = ['儿科' , '产科' , '妇科', '男科'];
 
     var data = [];
+    var cityList = Object.keys(cities);
 
+    // 批量产生随机物料信息
     for (var i = 0; i < 30; i++) {
+        var regions = random.getFrom(cityList, 3);
         data.push({
-            id: i * 1000,
-            visitCount: random.int(50, 1000),
-            name: random.words(cities) + random.words(sections) + '专业医院',
+            id: i + 1000,
+            visitCount: random.number(50, 1000),
+            name: random.words(regions) + random.words(sections) + '专业医院',
             sections: random.getFrom(sections, 3),
-            cities: cities
+            cities: regions
         });
     }
 
     module.exports = {
-        // find 本应该在memset中设计的暂时在这里实现
         find: function (selector) {
             if (!selector || !selector.id) {
                 return random.getFrom(data);
@@ -35,10 +38,6 @@ define(function (require, exports, module) {
                     return false;
                 }
             });
-        },
-        remove: function (sections) {
-            // 删除符合条件的数据
-            return true;
         }
     };
 });

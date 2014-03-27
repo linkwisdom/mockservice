@@ -74,7 +74,8 @@ exports.use = function (name) {
         db[name] = {};
         this.define(name);
     }
-    return collection = db[name];
+    collection = db[name];
+    return collection;
 };
 
 /**

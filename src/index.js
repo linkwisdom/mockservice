@@ -6,6 +6,7 @@
  * @author  Liandong Liu (liuliandong01@baidu.com)
  */
 
+// scan 扫描目标文件夹获取mock文件
 var scan = require('./scan');
 
 /** 
@@ -28,18 +29,18 @@ var CONTENT_TYPE = {
 /**
  * 默认延迟时间为 50ms
  * 
- * @inner
+ * @const
  * @type {Number}
  */
-var timeoutSpan = 50;
+var TIMEOUT_SPAN = 50;
 
 /**
  * 配置参数
  * 
- * @param {Object} config 配置参数
- * @param {string} config.dir: mock文件路径
- * @param {Object} config.pacakges: 包路径配置
- * @param {Object} config.logError 错误日志输出配置
+ * @param {!Object} config 配置参数
+ * @param {!string} config.dir: mock文件路径
+ * @param {?Object} config.pacakges: 包路径配置
+ * @param {?Object} config.logError 错误日志输出配置
  */
 exports.config = function (config) {
     if (config && config.dir) {
@@ -86,12 +87,13 @@ global.printError = function (exception, msg) {
     }
 
     // 描述信息直接打印
-    if (msg) {
+    if ('undefined' !== typeof msg) {
         console.log(msg);
     }
 
     // 错误信息高亮显示在console中
     if ('object' == typeof exception) {
+        // 高亮显示错误信息
         console.log('\033[31m \033[05m ', exception.message, '\033[0m');
 
         var logFile =  process._logError.logFile;
@@ -138,12 +140,11 @@ function pack(data) {
  *     };
  * };
  * ``
- * 
  * @param  {http.ClientRequest} request  客户端请求
  * @param  {http.ServerResponse} response 服务端响应对象
  */
 exports.getContext = function (request, response) {
-    var query= request.query; // 请求参数
+    var query = request.query; // 请求参数
     var path = query.path; //请求路径信息
 
     // 支持param和params两种参数接口
@@ -203,6 +204,9 @@ exports.getContext = function (request, response) {
 exports.serve = function (request, response) {
     var result = {status: 200, data: null};
     var context = this.getContext(request, response);
+    if (!context) {
+        return;
+    }
 
     // 从服务列表中获取处理函数
     var proc = scan.getResponse(context.path);
@@ -258,14 +262,14 @@ exports.serve = function (request, response) {
         };
     }
 
-    // 延迟响应请求， 默认为100ms
+    // 延迟响应请求
     setTimeout( 
         function () {
             // timeout 不返回到客户端
             delete result._timeout;
             response.end(pack(result));
         },
-        result._timeout || timeoutSpan
+        result._timeout || TIMEOUT_SPAN
     );
 };
 

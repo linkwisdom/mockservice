@@ -39,15 +39,7 @@ function randInt(min, max) {
     (max === undefined) && (max = MAX_NUM);
     var num = Math.floor(min + Math.random() * (max - min + 1));
     return num;
-};
-
-/**
- * 随机整数
- * 
- * @type {function}
- * @public
- */
-exports.int = randInt;
+}
 
 /**
  * getFrom 从数组中随机选择num个元素
@@ -89,7 +81,7 @@ exports.number = function (min, max) {
  * @return {number} 随机数值
  * @public
  */
-exports.float = function (min, max, precise) {
+exports.floatNumber = function (min, max, precise) {
     min || (min = 0);
     (max === undefined) && (max = MAX_NUM);
     var rst = Math.random() * (max - min) + min;
@@ -154,8 +146,8 @@ exports.words = function (min, max, source) {
 
     // 如果第一个参数未定义，默认返回一个单词
     } else if (arg1 === undefined) {
-        min = max = 1 
-    };
+        min = max = 1;
+    }
 
     source = source || CN_WORDS;
     var len = source.length;
@@ -173,7 +165,9 @@ exports.words = function (min, max, source) {
             rst = rst.concat(source[idx]);
             break;
         } else {
-            rst = rst.concat(source[idx].slice(0, num - count + source[idx].length));
+            rst = rst.concat(
+                source[idx].slice(0, num - count + source[idx].length)
+            );
             break;
         }
     }

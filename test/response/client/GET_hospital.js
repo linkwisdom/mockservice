@@ -1,6 +1,12 @@
 /**
  * @file 测试医院
+ * 
  * @author Liandong Liu (liuliandong01@baidu.com)
+ *
+ * 测试内容
+ * - storage 存取器
+ * - template 模版内容生成
+ * - random 随机物料生成器
  */
 define(function (require, exports, module) {
     var db = require('lib/db');
@@ -9,6 +15,13 @@ define(function (require, exports, module) {
 
     module.exports = function (path, param) {
         var hospital = db.hospital.find({id: param.hospitalId})[0];
+
+        if (!hospital) {
+            return {
+                status: 400,
+                data: []
+            };
+        }
 
         // 修改hospital的访问量
         hospital.visitCount++;

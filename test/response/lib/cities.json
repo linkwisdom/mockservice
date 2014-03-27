@@ -1,1 +1,22 @@
-["北京", "上海", "深圳"]
+{
+    "北京": {
+        "cnName": "北京",
+        "pyName": "beijing",
+        "code": "101010100"
+    },
+    "上海": {
+        "cnName": "上海",
+        "pyName": "shanghai",
+        "code": "101020100"
+    },
+    "重庆": {
+        "cnName": "重庆",
+        "pyName": "chongqing",
+        "code": "101040100"
+    },
+    "天津": {
+        "cnName": "天津",
+        "pyName": "tianjin",
+        "code": "101030100"
+    }
+}
