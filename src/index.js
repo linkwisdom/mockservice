@@ -30,7 +30,7 @@ var CONTENT_TYPE = {
  * 默认延迟时间为 50ms
  * 
  * @const
- * @type {Number}
+ * @type {number}
  */
 var TIMEOUT_SPAN = 50;
 
@@ -372,7 +372,7 @@ exports.request = function (config) {
  * @param  {string}             config.host 目标主机hostname 
  * @param  {number}             config.port 目标主机端口
  *     
- * @return {function}      请求处理函数
+ * @return {Function}      请求处理函数
  */
 exports.proxy = function (config) {
     return function (context) {

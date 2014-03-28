@@ -117,7 +117,7 @@ function scanDir(cwd) {
 /**
  * 暴露扫描文件接口
  * 
- * @type {function}
+ * @type {Function}
  */
 exports.scanDir = scanDir;
 
@@ -140,7 +140,7 @@ function moduleError(path, param) {
 /**
  * 获得响应服务函数
  * @param  {string} path 请求path
- * @return {function}    请求响应函数
+ * @return {Function|Object} 请求响应函数或数据对象
  */
 exports.getResponse = function (path) {
     // 先检查冷服务是否存在

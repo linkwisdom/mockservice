@@ -1,5 +1,5 @@
 /**
- * @file memory storage of dataset
+ * @file 内存KV存储数据集
  * 
  * @author Liandong Liu (liuliandong01@baidu.com)
  */

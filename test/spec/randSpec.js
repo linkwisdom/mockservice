@@ -1,3 +1,9 @@
+/**
+ * @file random模块测试
+ * - random提供了随机字符串、随机时间、随机数组的产生
+ *
+ * @author Liandong Liu (liuliandong01@baidu.com)
+ */
 var random = require('../../modules/random');
 
 describe('jasmine-node', function () {
@@ -33,4 +39,3 @@ describe('jasmine-node', function () {
         expect(random.getFrom(source, 2).length).toBe(2);
     });
 });
-

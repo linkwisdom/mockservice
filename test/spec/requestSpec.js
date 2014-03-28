@@ -133,4 +133,3 @@ describe('jasmine-node', function () {
         });
     }, 1000);
 });
-
