@@ -4,14 +4,20 @@
  * @author Liandong Liu (liuliandong01@baidu.com)
  */
 
-var ONE_DAY = 86400000; //一天的时间值
-var MAX_NUM = 1609372800000; //2020-12-31 作为默认最大数取值
+/**
+ * 随机数的配置
+ *
+ * @const
+ * @type {number}
+ */
+var ONE_DAY = 86400000;
+var MAX_NUM = 1609372800000;
 
 /**
- * 随机中文字符串，建议用户用户自己指定随机数组
+ * 随机中文字符串，建议用户自己指定随机数组
  * 
- * @inner
- * @type {Array}
+ * @const
+ * @type {Array.<string>}
  */
 var CN_WORDS = [
     '第一', '权威', '儿童', '成人', '职场',
@@ -19,9 +25,9 @@ var CN_WORDS = [
 ];
 
 /**
- * 有偏差的随机英文随机字符组合
+ * 有偏差的随机英文数字随机字符组合
  * 
- * @type {String}
+ * @type {string}
  */
 var CHARS = 'abcdefg-hijklmnopqrstu-vwxyz-'
     + 'ABCDEFGHIG-KLMNOPQRSTU-VWXYZ-0123456789';
@@ -127,7 +133,7 @@ exports.formatDate = function (pre, after, format) {
  * 
  * @param  {?number} min 字符最小长度
  * @param  {?number} max 字符最大长度
- * @param  {?Arrary|string} source 字符最小长度
+ * @param  {?Arrary.<string>} source 字符最小长度
  * @return {string} 随机字符串
  * @public
  */

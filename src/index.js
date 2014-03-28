@@ -39,7 +39,7 @@ var TIMEOUT_SPAN = 50;
  * 
  * @param {!Object} config 配置参数
  * @param {!string} config.dir: mock文件路径
- * @param {?Object} config.pacakges: 包路径配置
+ * @param {?Object} config.packages: 包路径配置
  * @param {?Object} config.logError 错误日志输出配置
  */
 exports.config = function (config) {
@@ -276,8 +276,8 @@ exports.serve = function (request, response) {
 /**
  * 独立服务运行，为了兼容edp中post数据获取方式
  * 
- * @param  {http.ClientRequest} request  客户端请求
- * @param  {http.ServerResponse} response 服务端响应对象
+ * @param {http.ClientRequest} request  客户端请求
+ * @param {http.ServerResponse} response 服务端响应对象
  */
 function service(request, response) {
     var url = require('url').parse(request.url, true);
@@ -315,7 +315,7 @@ function service(request, response) {
 /**
  * 独立服务运行
  * 
- * @param  {number} port 端口号
+ * @param {number} port 端口号
  */
 exports.listen = function (port) {
     port || (port = 8181);
@@ -327,7 +327,7 @@ exports.listen = function (port) {
 /**
  * 关闭服务
  * 
- * @param  {nunber} millies 延迟时间
+ * @param {nunber} millies 延迟时间
  * @public
  */
 exports.close = function (millies) {
