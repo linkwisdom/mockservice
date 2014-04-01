@@ -125,7 +125,7 @@ exports.scanDir = scanDir;
  * 模块加载错误提示信息
  * @param  {string} path  请求path
  * @param  {?Object} param 请求参数
- * @return {Object}       返回数据
+ * @return {Object}  返回数据
  */
 function moduleError(path, param) {
     return {

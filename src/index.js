@@ -121,7 +121,7 @@ global.printError = function (exception, msg) {
  * 格式化输出数据
  * 
  * @param  {Object} data 输出数据对象
- * @return {string}     输出文本
+ * @return {string} 输出文本
  */
 function pack(data) {
     return JSON.stringify(data, '\t', 4);
@@ -132,7 +132,7 @@ function pack(data) {
  * - 如果业务参数与默认接口格式不一致；通过扩展这个接口即可
  * 
  * ```js
- * require('mockservice').getContext = function(req, res) {
+ * require('mockservice').getContext = function (req, res) {
  *     var query = req.query;
  *     return {
  *         path: query.path,
@@ -171,7 +171,7 @@ exports.getContext = function (request, response) {
             param = JSON.parse(param);
         } catch (ex) {
             // 对于不规范的json对象额外处理
-            param = eval( '(' + param + ')');
+            param = eval('(' + param + ')');
         }
     }
 
@@ -204,7 +204,7 @@ exports.getContext = function (request, response) {
 exports.serve = function (request, response) {
     var result = {status: 200, data: null};
     var context = this.getContext(request, response);
-    if (!context) {
+    if (!context || !context.path) {
         return;
     }
 
@@ -347,7 +347,7 @@ exports.close = function (millies) {
  * 为edp提供服务暴露接口
  * 
  * @param  {Object} config 配置参数
- * @return {Fucntion}      请求处理函数
+ * @return {Fucntion({Object})}  请求处理函数
  */
 exports.request = function (config) {
     var me = this;
@@ -358,7 +358,7 @@ exports.request = function (config) {
         request.body = request.bodyBuffer;
         me.serve(request, response);
 
-        // 阻止其它规则干扰改请求
+        // 阻止其它规则干扰该请求
         context.stop();
     };
 };
@@ -366,13 +366,13 @@ exports.request = function (config) {
 /**
  * 扩展edp的请求转发服务
  * 
- * @param  {Object}             config 配置参数
- * @param  {string|RegExp}      config.source 源字符串或正则表达
- * @param  {string|Fucntion}    config.target 替换目标字符串或函数
- * @param  {string}             config.host 目标主机hostname 
- * @param  {number}             config.port 目标主机端口
+ * @param  {Object}  config 配置参数
+ * @param  {string|RegExp}  config.source 源字符串或正则表达
+ * @param  {string|Fucntion}  config.target 替换目标字符串或函数
+ * @param  {string} config.host 目标主机hostname 
+ * @param  {number} config.port 目标主机端口
  *     
- * @return {Function}      请求处理函数
+ * @return {Function({Object}) 请求处理函数
  */
 exports.proxy = function (config) {
     return function (context) {
