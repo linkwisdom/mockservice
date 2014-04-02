@@ -54,6 +54,48 @@ mockservice [![NPM version](https://badge.fury.io/js/mockservice.png)](https://n
     };
 ```
 
+### 多个项目模块的配置
+
+- 传入config为数组
+
+```js
+    ms.config([
+        {
+            dir: './response',
+            logError: {
+                logFile: 'ms-error-log'
+            }
+        },
+        {
+            dir: './debug'
+        }
+    ]);
+```
+
+- 多次config
+```js
+    ms.config({
+        dir: './response',
+        packages: {
+            'lib': './service'
+        }
+    });
+
+    ms.config({
+        dir: './debug',
+        packages: {
+            'service': './service'
+        }
+    });
+```
+
+- 配置说明
+
+1. 每个模块的配置独立可以有分别的dir和packages配置
+2. `packages`不同模块可以共享，因此不可命名冲突
+3. 多次`logError`配置只有最后一次有效
+4. 建议`packages`、`cache`、`pathRegs`的配置分别写到项目模块配置文件`ms-config.js`文件中
+
 - 启动服务器
 
 > edp ws start
@@ -117,6 +159,8 @@ mockservice [![NPM version](https://badge.fury.io/js/mockservice.png)](https://n
 
 - 请求规范
 
+> 以下规范为默认的请求规范，如果不符合，可自定义getContext方法获取`path`、`param`和`Context`对象
+
 > 前端代码发送真实请求；请求路径符合request.ajax?path=XXX形式;
 > 参数param可以是POST或GET参数
 param符合严格规范的json格式
@@ -129,12 +173,11 @@ param符合严格规范的json格式
 
 > 独立mock文件命名为{pkgname}/{pathname}.js;
 
--- 对应每个接口应该指定一个响应函数；响应函数有固定参数列表(path, param)
+-- 对应每个接口应该指定一个响应函数；响应函数有固定参数列表(path, param, context)
 
 -- index.js 文件可以定义多个接口的响应函数 (但是不建议写到index文件)
 
 -- {pathname}.js 文件只能定义对应pathname的响应函数
-
 
 ————————————————————————
 
@@ -143,7 +186,17 @@ param符合严格规范的json格式
 ```js
 // mock 的用法参考./test的文件
 
-module.exports = function (path, param) {
+/**
+ * 参数说明
+ *
+ * @param  {string} path    路由路径
+ * @param  {Object} param   请求参数
+ * @param  {HttpRequest} context.request
+ * @param  {HttpResponse} context.response
+ * @param  {function({array|object})} context.setCookie
+ * @param  {function} context.update 更新服务
+ */
+module.exports = function (path, param, context) {
 
     // tpl在packages定义了路径
     var tpl = require('tpl/hospital');

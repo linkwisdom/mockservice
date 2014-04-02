@@ -6,7 +6,7 @@ function start(port, debugDir) {
     var fs = require( 'fs' );
     var path = require( 'path' );
     var cwd = process.cwd();
-
+    
     if (!debugDir) {
         debugDir = path.resolve(cwd, 'debug');
     }
