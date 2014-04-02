@@ -4,17 +4,17 @@ exports.documentRoot = __dirname;
 
 var ms = require('../src/index');
 
-ms.config({
-    dir: __dirname + '/response',
-    packages: {
-        'common': './common',
-        'client': './client',
-        'lib': './lib'
+ms.config([
+    {
+        dir: './response',
+        logError: {
+            logFile: 'ms-error-log'
+        }
     },
-    logError: {
-        logFile: 'ms-error-log'
+    {
+        dir: './debug'
     }
-});
+]);
 
 exports.getLocations = function () {
     return [

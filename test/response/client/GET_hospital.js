@@ -10,7 +10,7 @@ define(function (require, exports, module) {
         hospital.visitCount++;
 
         var model = {
-            id: hospital.id,
+            id: hospital.id + 2,
             name: hospital.name,
             city: random.words(hospital.cities), // 随机选择国内城市
             section: random.words(hospital.sections) // 随机选择医院科室
