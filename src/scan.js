@@ -157,6 +157,9 @@ exports.getResponse = function (path) {
             printError(ex, path);
             return moduleError;
         }
+    } else {
+        // 找不到服务文件，需要重启服务，以便扫描mock目录文件是否添加
+        console.log(path, 'not found! add mock-file and reboot your server');
     }
 
     return null;
