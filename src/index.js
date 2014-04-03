@@ -6,6 +6,9 @@
  * @author  Liandong Liu (liuliandong01@baidu.com)
  */
 
+// 全局方法扩展
+require('./extension');
+
 var scan = require('./scan');
 var configMap = {};
 
@@ -101,82 +104,15 @@ exports.update = function () {
     }
 };
 
-/**
- * 错误日志处理
- * 
- * @param  {[type]} exception [description]
- * @param  {[type]} msg       [description]
- * @return {[type]}           [description]
- */
-global.printError = function (exception, msg) {
-    // 如果全局没有指定错误处理方法；默认不输出
-    if (!process._logError) {
-        return;
-    }
-
-    // 描述信息直接打印
-    if (msg) {
-        console.log(msg);
-    }
-
-    // 错误信息高亮显示在console中
-    if ('object' == typeof exception) {
-        console.log('\033[31m \033[05m ', exception.message, '\033[0m');
-
-        var logFile =  process._logError.logFile;
-
-        // 如果指定了logFile 错误日志打印到日志文件，否则直接输出
-        if (logFile) {
-            logFile = require('path').join(process.cwd(), logFile);
-
-            var errorMSG = [msg, exception.stack].join('\n');
-
-            // 追加方式写入文件
-            require('fs').appendFile(
-                logFile,
-                errorMSG,
-                function (err) {
-                    err && console.log(err);
-                }
-            );
-        } else {
-            console.log(exception.stack);
-        }
-    }
-};
-
-/**
- * 格式化输出数据
- * 
- * @param  {Object} data 输出数据对象
- * @return {string}     输出文本
- * @private
- */
-function pack(data) {
-    return JSON.stringify(data, '\t', 4);
-}
-
-function setCookie(cookies) {
-    var arr = [];
-    var tp = typeof cookies;
-    if (tp == 'object') {
-        for (var item in cookies) {
-            arr.push(item + '=' + cookies[item]);
-        }
-    } else if (tp == 'array'){
-        arr = cookies;
-    } else {
-        arr.push(cookies);
-    }
-
-    headContent['Set-Cookie'] = arr;
-}
-
 exports.getContext = function (request, response) {
-    var func = process.getContext || require('./getContext');
-    var context = func.call(this, request, response);
+    var headers = {
+        'content-type': 'application/json;charset=UTF-8'
+    };
+    var func = global.getContext || require('./getContext');
+    var context = func.call(this, request, response) || {};
     context.request = request;
     context.response = response;
+    context.headers = headers;
     context.update = exports.update;
     context.setCookie = setCookie;
     return context;
@@ -192,6 +128,7 @@ exports.getContext = function (request, response) {
 exports.serve = function (request, response) {
     var result = {status: 200, data: null};
     var context = this.getContext(request, response);
+    var headers = context.headers || headContent;
 
     // 从服务列表中获取处理函数
     var proc = scan.getResponse(context.path);
@@ -204,12 +141,12 @@ exports.serve = function (request, response) {
             if (result && result._status) {
 
                 // 返回正常，且有状态码
-                response.writeHead(result._status, headContent);
+                response.writeHead(result._status, headers);
                 delete result._status;
             } else if (result) {
 
                 // 如果有数据返回但是没有status, 默认为200
-                response.writeHead(200, headContent);
+                response.writeHead(200, headers);
             } else {
 
                 // 如果返回值为空；则认为是服务端错误
@@ -219,7 +156,7 @@ exports.serve = function (request, response) {
                     data: 'no result defined'
                 };
 
-                response.writeHead(500, headContent);
+                response.writeHead(500, headers);
             }
 
         } catch (ex) {
@@ -231,7 +168,7 @@ exports.serve = function (request, response) {
             };
 
             // 设置错误状态
-            response.writeHead(result.status, headContent);
+            response.writeHead(result.status, headers);
 
             printError(ex, context.path);
         }
@@ -254,7 +191,7 @@ exports.serve = function (request, response) {
         function () {
             // timeout 不返回到客户端
             delete result._timeout;
-            response.end(pack(result));
+            response.end(packJSON(result));
         },
         result._timeout || timeoutSpan
     );

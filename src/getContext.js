@@ -1,17 +1,6 @@
 /**
  * 请求解析出path和param
  * - 如果业务参数与默认接口格式不一致；通过扩展这个接口即可
- * 
- * ```js
- * require('mockservice').getContext = function(req, res) {
- *     var query = req.query;
- *     return {
- *         path: query.path,
- *         param: query.param
- *     };
- * };
- * ```
- * 
  * @param  {http.ClientRequest} request  客户端请求
  * @param  {http.ServerResponse} response 服务端响应对象
  * @public
@@ -54,7 +43,7 @@ function getContext(request, response) {
         path = path.replace(/\//g, '_');
     } else {
         // path不存在是参数错误
-        response.end(pack({
+        response.end(packJSON({
             staus: 300,
             data: 'request path undefined'
         }));
@@ -65,6 +54,17 @@ function getContext(request, response) {
         path: path,
         param: param
     };
+}
+
+/**
+ * 格式化输出数据
+ * 
+ * @param  {Object} data 输出数据对象
+ * @return {string}     输出文本
+ * @private
+ */
+function packJSON(data) {
+    return JSON.stringify(data, '\t', 4);
 }
 
 module.exports = getContext;
