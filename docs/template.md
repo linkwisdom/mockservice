@@ -19,8 +19,8 @@
     tpl.compile(html);
 
     tpl.getRenderer('title')({
-            name: 'my cloud',
-            city: 'beijing'
-        });
+        name: 'my cloud',
+        city: 'beijing'
+    });
 
 ```
