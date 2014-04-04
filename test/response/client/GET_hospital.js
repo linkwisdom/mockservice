@@ -2,6 +2,7 @@ define(function (require, exports, module) {
     var db = require('lib/db');
     var tpl = require('template/hospital');
     var random = include('random');
+    var servcie = require('debug/service');
 
     module.exports = function (path, param) {
         var hospital = db.hospital.find({id: param.hospitalId})[0];
@@ -18,6 +19,7 @@ define(function (require, exports, module) {
 
         // 业务数据
         var data = {
+            service: servcie,
             info: hospital,
             visitCount: hospital.visitCount,
             timestamp: random.timestamp(),

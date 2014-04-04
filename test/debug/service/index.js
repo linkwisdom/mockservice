@@ -1,1 +1,1 @@
-exports.list = [1, 3, 4];
+exports.list = ['掏心', '换肾', '挖眼'];

@@ -12,6 +12,7 @@ ms.config([
         }
     },
     {
+        name: 'debug',
         dir: './debug'
     }
 ]);

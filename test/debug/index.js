@@ -15,7 +15,7 @@ define(function (require, exports, module) {
     exports.SET_cookies = function (path, params, context) {
         var cookies = params.cookies;
         if (cookies) {
-            context.setCookie(cookies);
+            setCookie(cookies, context);
         }
         return {
             cookies: cookies

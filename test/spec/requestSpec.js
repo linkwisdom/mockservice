@@ -1,10 +1,22 @@
 var request = require('request');
 
+process.chdir(__dirname);
 
 var ms = require('../../');
-ms.config({
-    dir: require('path').resolve(__dirname, '../response')
-});
+
+ms.config([
+    {
+        dir: '../response',
+        logError: {
+            logFile: 'ms-error-log'
+        }
+    },
+    {
+        name: 'debug',
+        dir: '../debug'
+    }
+]);
+
 ms.listen(8848);
 
 // close server N seconds
