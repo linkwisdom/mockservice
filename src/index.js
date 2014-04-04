@@ -81,6 +81,7 @@ exports.config = function (config) {
 
         // beef 包管理配置, 可`重复`配置
         require('beef').config({
+            name: config.name,
             baseUrl: config.dir,
             packages: config.packages
         });

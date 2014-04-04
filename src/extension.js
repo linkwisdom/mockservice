@@ -1,4 +1,11 @@
 /**
+ * @file 扩展文件
+ * - 所有的全局函数支持用户自定义重写
+ *
+ * @author Liandong Liu (liuliandong01@baidu.com)
+ */
+
+/**
  * 错误日志处理
  * 
  * @param  {[type]} exception [description]

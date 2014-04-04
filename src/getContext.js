@@ -56,15 +56,4 @@ function getContext(request, response) {
     };
 }
 
-/**
- * 格式化输出数据
- * 
- * @param  {Object} data 输出数据对象
- * @return {string}     输出文本
- * @private
- */
-function packJSON(data) {
-    return JSON.stringify(data, '\t', 4);
-}
-
 module.exports = getContext;
