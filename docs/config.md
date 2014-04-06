@@ -71,7 +71,7 @@
     });
 ```
 
-- 不同项目模块直接的服务可以共享
+- 不同项目模块之间的服务可以共享
 
 ```js
     require('lib/db'); //  ./response/lib/db.js
@@ -109,8 +109,14 @@
 
 ### 模块内项目配置
 
-> ms-config.js 是放在mock文件中的配置文件；文件的配置字段与ms.config(options)中的字段一致；
+> ms-config.js 是放在mock文件中的配置文件；
+
+> 文件的配置字段与ms.config(options)中的字段一致；
+
+> ms-config.js 文件的配置向子文件夹传递
+
 > 放在ms-config.js中的目的是为了更方便的在开发过程中修改配置
+
 > ms-config.js不是必需的；只有默认规则不满足需要时添加该文件即可;
 
 
