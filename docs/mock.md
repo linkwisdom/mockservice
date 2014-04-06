@@ -25,11 +25,11 @@
         };
     };
 ```
-- 请求参数`param`
-- 请求上下文`context`
-- 设置状态码
-- 设置超时
-- 设置cookie
+- 请求参数 `param`
+- 请求上下文 `context`
+- 设置状态码 `_status`
+- 设置超时 `_timeout`
+- 设置cookie `setCookie`
 
 ### 补充说明
 
