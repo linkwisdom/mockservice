@@ -31,4 +31,21 @@ memset
 
     // 获取第3, 8个数据对象
     var parts = set.find(3, 5);
+    
+    // 获取数据长度
+    var len = set.length;
+    
+    // 删除数据, 返回删除后的数据长度
+    var num = set.remove({mod: 2});
+    
+    // 插入数据
+    set.insert({name: 'mygod', mod: 1});
+    
+    // 批量拆入数据
+    set.insert([...]);
+    
+    // 修改数据 (直接对查询结构修改)
+    items.forEach(function (item, idx) {
+        item.name = 'baby ' + idx;
+    });
 ```
