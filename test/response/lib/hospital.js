@@ -7,7 +7,6 @@
 define(function (require, exports, module) {
     var random = require('random');
     var MemSet = require('memset');
-    var storage = require('storage');
     var cities = require('./cities');
     var sections = ['儿科' , '产科' , '妇科', '男科'];
 
@@ -24,7 +23,5 @@ define(function (require, exports, module) {
     }
 
     var set = new MemSet(data);
-    storage.set('hospital', set);
-
     module.exports = set;
 });
