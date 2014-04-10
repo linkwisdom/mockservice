@@ -205,12 +205,12 @@ module.exports = function (path, param, context) {
     var db = require('lib/mendb');
     
     /**
-     * include 是mockservice内置的包导入函数；用于加载node模块
+     * 
      * moment, random, template 为支持mockservice内置的组件
      */
-    var moment = include('moment');  // 时间格式化组件
-    var random = include('random');  // 随机数据产生器
-    var template = include('template'); // 基于etpl的模板解析引擎 
+    var moment = require('moment');  // 时间格式化组件
+    var random = require('random');  // 随机数据产生器
+    var template = require('template'); // 基于etpl的模板解析引擎 
     
     /**
      * 因为采用的是menset设计，因此直接赋值相当于改变了数据集
@@ -248,7 +248,9 @@ module.exports = function (path, param, context) {
 ## 扩展modules 说明
 > 扩展的modules是为了更好的支持mock数据的生成；
 
-> 所有的modules通过include(modulename)既可以获取到；
+> 所有的modules通过require(modulename)既可以获取到；
+
+> 从v0.1.12开始停止使用include; 全部使用require方式获取组件；
 
 > mockservice; 内置了以下通用mock支持组件
 
