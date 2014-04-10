@@ -19,7 +19,7 @@ mockservice 介绍
 [random](random.md)
 [storage](storage.md)
 [templage](template.md)
-
+[memset](memset.md)
 
 **通过beef扩展功能**
 
