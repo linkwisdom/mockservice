@@ -16,38 +16,38 @@ define(function (require, exports, module) {
 
 ```js
 
-// 采用本地moment模块
+// 配置单个包
 require.config({
     name: 'moment',
     dir: './modules/moment'
 });
 
-// 定义math包
-reqruire.config({
-    name: 'math',
-    dir: './modules/math',
+// 批量导入包
+require.config({
+    name: 'modules',
+    dir: __dirname + '/../modules',
     packages: {
-        add: './add',
-        multiply: './multiply',
-        util: './util'
+        moment: 'moment',
+        random: 'random',
+        storage: 'storage',
+        template: 'template'
     }
 });
 
-var math = require('math');
+var modules = require('modules');
 
-var power = require('math/power');
-
-var add = require('add');
+var random = require('modules/random');
 
 // 等价于
-add = require('math/add');
-
+var random = require('random');
 ```
 
 ## beef 支持插件
 
 ```js
 var json = require('json!resource/config.json');
+
+var text = require('text!resource/r.txt');
 ```
 
 ## beef 支持异步调用方式

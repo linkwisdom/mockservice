@@ -8,6 +8,10 @@
 - index.js文件可以写多个service; 但是不会动态更新
 - 每个文件夹可以独立配置`ms-config.js`文件
 
+[文件结构配置](config.md)
+[beef包管理](beef.md)
+[自定义扩展](extension.md)
+
 ### 请求服务方法及参数
 
 ```js
@@ -25,17 +29,32 @@
         };
     };
 ```
+
 - 请求参数 `param`
 - 请求上下文 `context`
 - 设置状态码 `_status`
 - 设置超时 `_timeout`
 - 设置cookie `setCookie`
 
+[context参数说明](context.md)
+
 ### 补充说明
 
 - define 结构不是必需的, 只是为了前后端兼容
+- 如果是静态数据，直接将数据作为暴露对象即可
 
-> 如果不准备兼容前端包, 可以直接用nodejs的写法；
+```js
+    define(function (require, expors, modules) {
+        module.exports = function (path, param) {
+            return {
+                status: 200,
+                data: []
+            };
+        };
+    });
+```
+
+等价于
 
 ```js
     module.exports = function (path, param) {
@@ -49,35 +68,8 @@
 等价于
 
 ```js
-    define(function (require, expors, modules) {
-        module.exports = function (path, param) {
-            return {
-                status: 200,
-                data: []
-            };
-        };
-    });
-```
-
-- 接口处理函数不是必须的
-
-> mock 的数据如果是上下文无关的，可以不用函数
-
-```js
-    // service/index.js
-
-    exports.GET_list = {
-        status: 200,
-        data: [1, 2, 3]
-    };
-
-    exports.GET_DList = function (path, param) {
-        return {
-            status: 200,
-            data: {
-                path: path,
-                appId: param.appId
-            }
-        };
-    };
+module.exports = {
+   status: 200,
+   data: [] 
+};
 ```

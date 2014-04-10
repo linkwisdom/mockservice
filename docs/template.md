@@ -6,7 +6,7 @@
 ——————————
 
 ```js
-    var tpl = include('template');
+    var tpl = require('template');
 
     var html = require('text!./tpl.html');
 

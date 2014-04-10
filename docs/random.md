@@ -3,7 +3,7 @@
 ### 产生数字
 
 ```js
-    var random = include('random');
+    var random = require('random');
 
     random.int(0, 1000); // 产生大于100的数据整数
     random.int(100); // 产生大于100的数据整数
@@ -17,7 +17,7 @@
 
 
 ```js
-    var random = include('random');
+    var random = require('random');
 
     random.timestamp(-100, -10); // 产生100天到10天之前的随机时间戳
     random.formatDate(-100, -10, 'YYYY年MM月DD日'); // ..., 产生随机时间，指定特定日期格式
@@ -28,7 +28,7 @@
 ### 产生字符串
 
 ```js
-    var random = include('random');
+    var random = require('random');
 
     var source = ['计划', '单元', '关键词'];
 
@@ -41,7 +41,7 @@
 
 ### 随机数组摘取
 ```js
-    var random = include('random');
+    var random = require('random');
 
     var source = ['计划', '单元', '关键词'];
 
