@@ -18,8 +18,22 @@
     var ms = require('mockservice');
 
     ms.config({
-        // dir 相当于定义了mock的basedir 及require的baseUrl
-        dir: './phoenix/debug'
+        dir: './nirvana-workspace/nirvana/debug',
+        logError: {
+            logFile: './server-log'
+        },
+        packages: {
+            lib: './lib'
+        }
+    });
+    
+    ms.config({
+        name: 'phoenix',
+        dir: './nirvana-workspace/phoenix/debug',
+        packages: {
+            advManage: './advManage',
+            common: './common'
+        }
     });
 
     // edp 通过getLocations 路由请求处理器
