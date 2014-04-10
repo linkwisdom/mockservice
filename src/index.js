@@ -13,12 +13,12 @@ var scan = require('./scan');
 var configMap = {};
 
 /** 
- * beef是为了支持AMDJS模块在服务端共用
+ * beef是为了支持A/CMDJS模块在服务端共用
  * 
  * @type {Object}
  * @public
  */
-global.require = require('beef');
+require = require('beef');
 
 /**
  * HTTP 响应Response的mine类型
@@ -80,7 +80,7 @@ exports.config = function (config) {
         }
 
         // beef 包管理配置, 可`重复`配置
-        require('beef').config({
+        require.config({
             name: config.name,
             baseUrl: config.dir,
             packages: config.packages
@@ -88,7 +88,7 @@ exports.config = function (config) {
 
         // include 用于自定义module引入 (即将废弃!!)
         global.include = function(moduleId) {
-            return global.require(moduleId);
+            return require(moduleId);
         };
 
          // 增加debug入口，方便mock调试

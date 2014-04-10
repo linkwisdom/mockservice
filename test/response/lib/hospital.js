@@ -6,6 +6,8 @@
  */
 define(function (require, exports, module) {
     var random = require('random');
+    var MemSet = require('memset');
+    var storage = require('storage');
     var cities = require('./cities');
     var sections = ['儿科' , '产科' , '妇科', '男科'];
 
@@ -21,24 +23,8 @@ define(function (require, exports, module) {
         });
     }
 
-    module.exports = {
-        // find 本应该在memset中设计的暂时在这里实现
-        find: function (selector) {
-            if (!selector || !selector.id) {
-                return random.getFrom(data);
-            }
+    var set = new MemSet(data);
+    storage.set('hospital', set);
 
-            return data.filter(function (item) {
-                if (item.id == selector.id) {
-                    return item;
-                } else {
-                    return false;
-                }
-            });
-        },
-        remove: function (sections) {
-            // 删除符合条件的数据
-            return true;
-        }
-    };
+    module.exports = set;
 });

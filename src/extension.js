@@ -8,9 +8,6 @@
 /**
  * 错误日志处理
  * 
- * @param  {[type]} exception [description]
- * @param  {[type]} msg       [description]
- * @return {[type]}           [description]
  */
 global.printError = function (exception, msg) {
     // 如果全局没有指定错误处理方法；默认不输出

@@ -15,7 +15,8 @@ module.exports = {
         moment: 'moment',
         random: 'random',
         storage: 'storage',
-        template: 'template'
+        template: 'template',
+        memset: 'memset'
     },
     cache: false,
     pathRegs: [/\w+_\w+/, 'scookie', 'zebra']
