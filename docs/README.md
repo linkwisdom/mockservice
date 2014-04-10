@@ -11,7 +11,7 @@ mockservice 介绍
 ----------------
 
 - 解析请求参数获取上下文 [context](context.md)
-- 扫描及匹配mock服务文件 [scan](scan.md)
+- 扫描及匹配mock服务文件
 - 执行服务处理函数
 - 扩展服务支持 
 
@@ -21,12 +21,12 @@ mockservice 介绍
 [templage](template.md)
 
 
-**** 通过beef扩展功能 ****
+**通过beef扩展功能**
 
 - 兼容前端*MDJS模块
 - 包结构组织管理
 
-[beef](beef.md)
+[beef 说明](beef.md)
 
 安装与配置
 ---------------
@@ -38,6 +38,9 @@ mock文件说明
 -----------------
 [mock文件](mock.md)
 
+用法
+----------------
+[参考test](../test)
 
 
 
