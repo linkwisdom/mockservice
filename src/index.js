@@ -86,8 +86,10 @@ exports.config = function (config) {
             packages: config.packages
         });
 
-        // include 用于自定义module引入
-        global.include = require('paw').require;
+        // include 用于自定义module引入 (即将废弃!!)
+        global.include = function(moduleId) {
+            return global.require(moduleId);
+        };
 
          // 增加debug入口，方便mock调试
         process.argv.forEach(function (item) {
@@ -130,6 +132,11 @@ exports.serve = function (request, response) {
     var result = {status: 200, data: null};
     var context = this.getContext(request, response);
     var headers = context.headers || headContent;
+    
+    if (!context.path) {
+        response.end('');
+        return;
+    }
 
     // 从服务列表中获取处理函数
     var proc = scan.getResponse(context.path);
@@ -318,3 +325,11 @@ exports.proxy = function (config) {
         }
     };
 };
+
+/**
+ * 增加自动包配置
+ * add in v0.1.12
+ *
+ * - 废弃使用paw-include
+ */
+exports.config(require('./config'));

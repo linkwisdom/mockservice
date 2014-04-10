@@ -9,6 +9,14 @@
  */
 
 module.exports = {
+    name: 'modules',
+    dir: __dirname + '/../modules',
+    packages: {
+        moment: 'moment',
+        random: 'random',
+        storage: 'storage',
+        template: 'template'
+    },
     cache: false,
     pathRegs: [/\w+_\w+/, 'scookie', 'zebra']
 };

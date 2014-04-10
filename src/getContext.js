@@ -16,11 +16,12 @@ function getContext(request, response) {
     if (request.body) {
         var body = request.body.toString();
         body = require('querystring').parse(body);
+        request.body = body;
 
         if (body.param || body.params) {
             param = body.param || body.params;
         }
-
+        
         if (body.path) {
             path = body.path;
         }
@@ -52,7 +53,9 @@ function getContext(request, response) {
 
     return {
         path: path,
-        param: param
+        param: param,
+        GET: query,
+        POST: request.body
     };
 }
 

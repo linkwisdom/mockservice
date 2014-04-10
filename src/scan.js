@@ -12,7 +12,12 @@
 
 var fs = require('fs');
 var path = require('path');
-var config = require('./config');
+
+// default config
+var config = {
+    cache: false,
+    pathRegs: [/\w+_\w+/]
+};
 
 // `冷服务`缓存; index.js中定义的服务; 支持缓存的服务
 var ws = {};
