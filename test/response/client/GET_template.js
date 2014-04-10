@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
-    var random = include('random');
-    var tpl = require('template/hospital');
+    var random = require('random');
+    var tpl = require('source/hospital');
 
     module.exports = function (path, param) {
         var regions = ['北京', '海淀', '朝阳', '西城', '东城'];

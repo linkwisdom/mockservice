@@ -4,7 +4,7 @@ define(function (require, exports, module) {
     var moment = require('lib/db');
 
     // 测试加载module是否正确
-    var storage = include('storage');
+    var storage = require('storage');
 
     storage.set('count', (storage.get('count') || 0) + 1);
 

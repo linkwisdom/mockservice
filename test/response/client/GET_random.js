@@ -3,7 +3,7 @@
  *
  */
 define(function (require, exports, module) {
-    var random = include('random');
+    var random = require('random');
 
     module.exports = function (path, param) {
         return {

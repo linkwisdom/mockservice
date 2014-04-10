@@ -20,7 +20,7 @@ define(function (require, exports, module) {
         packages: {
             common: './common',
             client: './client',
-            template: './template',
+            source: './source',
             lib: './lib'
         }
     };

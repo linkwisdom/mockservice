@@ -5,7 +5,7 @@
  * 
  */
 define(function (require, exports, module) {
-    var random = include('random');
+    var random = require('random');
     var cities = require('./cities');
     var sections = ['儿科' , '产科' , '妇科', '男科'];
 

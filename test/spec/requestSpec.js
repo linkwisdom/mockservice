@@ -19,7 +19,7 @@ ms.config([
 
 ms.listen(8848);
 
-// close server N seconds
+// close server in N seconds
 ms.close(3500);
 
 var testResponse = function (option, done) {

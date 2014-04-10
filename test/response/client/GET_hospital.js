@@ -1,7 +1,7 @@
 define(function (require, exports, module) {
     var db = require('lib/db');
-    var tpl = require('template/hospital');
-    var random = include('random');
+    var tpl = require('source/hospital');
+    var random = require('random');
     var servcie = require('debug/service');
 
     module.exports = function (path, param) {

@@ -1,5 +1,5 @@
 define(function (require, exports, module) {
-    var storage = include('storage');
+    var storage = require('storage');
     storage.set('message', 'ok');
 
     module.exports = function (path, param) {

@@ -4,8 +4,18 @@ var ms = require('../');
 var argv = process.argv;
 if (argv[1] == __filename) {
 
-    ms.config({
-        dir: __dirname + '/response'
-    });
+    ms.config([
+        {
+            dir: './response',
+            logError: {
+                logFile: 'ms-error-log'
+            }
+        },
+        {
+            name: 'debug',
+            dir: './debug'
+        }
+    ]);
+    
     ms.listen(argv[2] || 8848);
 }
