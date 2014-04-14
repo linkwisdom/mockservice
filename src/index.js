@@ -320,7 +320,14 @@ exports.proxy = function (config) {
 
         if (config.host) {
             config.port = config.port  || 80;
-            request.headers = config.host + ':' + config.port;
+
+            if (config.port && config.port) {
+                request.headers = config.host + ':' + config.port;
+            } else {
+                config.host = config.host || 'localhost';
+                config.port = config.port || process.port || 8848;
+            }
+            
             proxy(config.host, config.port)(context);
         }
     };
