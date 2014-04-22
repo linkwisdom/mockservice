@@ -300,38 +300,36 @@ exports.request = function (config) {
  * 扩展edp的请求转发服务
  * 
  * @param  {Object} config 配置参数
- *     source {string|RegExp} 源字符串或正则表达
- *     target {string|Fucntion} 替换目标字符串或函数
- *     host {string} 目标主机hostname 
- *     port {number} 目标主机端口
+ *     {string|RegExp} config.source源字符串或正则表达
+ *     {string|Fucntion} config.target 替换目标字符串或函数
+ *     {string=} config.host目标主机hostname 
+ *     {number=} config.port目标主机端口
  *     
  * @return {Function}      请求处理函数
  * @public
  */
 exports.proxy = function (config) {
+    var _host = config.host + ':' + config.port;
     return function (context) {
         var request = context.request;
         var replace = config.replace;
+        var headers = request.headers;
 
         if (replace && replace.source) {
             var url = request.url;
             request.url = url.replace(replace.source, replace.target);
         }
 
-        if (config.host) {
-            config.port = config.port  || 80;
-
-            if (config.port && config.port) {
-                request.headers = config.host + ':' + config.port;
-            } else {
-                config.host = config.host || 'localhost';
-                config.port = config.port || process.port || 8848;
-            }
-            
+        if (headers && headers.host) {
+            var hd = headers.host.split(':');
+            config.port = config.port || hd[1];
+            config.host = config.host || hd[0];
+            headers.host = config.host + ':' + config.port;
             proxy(config.host, config.port)(context);
         }
     };
 };
+
 
 /**
  * 增加自动包配置
