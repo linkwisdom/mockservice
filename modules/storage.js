@@ -36,6 +36,10 @@ exports.init = function (data) {
     return collection;
 };
 
+exports.addSet = function (data) {
+    return this.init(data);
+};
+
 /**
  * 从当前集合获取值
  * 

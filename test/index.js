@@ -14,6 +14,10 @@ if (argv[1] == __filename) {
         {
             name: 'debug',
             dir: './debug'
+        },
+        {
+            name: 'service',
+            dir: './service'
         }
     ]);
     

@@ -53,7 +53,12 @@ Memset.prototype = {
         return set.length;
     },
     insert: function (docs) {
-        this.set.concat(docs);
+        if (Array.isArray(docs)) {
+            this.set.concat(docs);   
+        } else if (docs) {
+            this.set.push(docs);
+        }
+        return this.set.length;
     },
     clear: function () {
         this.set = this.set.filter(function(item) {
@@ -65,6 +70,5 @@ Memset.prototype = {
 Memset.prototype.__defineGetter__('length', function() {
     return this.set.length;
 });
-
 
 module.exports = Memset;

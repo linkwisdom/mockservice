@@ -7,9 +7,12 @@
 
 /**
  * 错误日志处理
- * 
+ *
+ * @public
+ * @param {Object|string} 异常信息
+ * @param {string} 异常信息标题
  */
-global.printError = function (exception, msg) {
+exports.printError = function (exception, msg) {
     // 如果全局没有指定错误处理方法；默认不输出
     if (!process._logError) {
         return;
@@ -53,11 +56,17 @@ global.printError = function (exception, msg) {
  * @return {string}     输出文本
  * @private
  */
-global.packJSON = function (data) {
+exports.packJSON = function (data) {
     return JSON.stringify(data, '\t', 4);
 };
 
-global.setCookie = function(cookies, context) {
+/**
+ * 设置cookie内容
+ * 
+ * @param {Object|Array|string} cookies
+ * @param {Object} context
+ */
+exports.setCookie = function(cookies, context) {
     context = context || this;
     var arr = [];
     var tp = typeof cookies;
@@ -72,5 +81,3 @@ global.setCookie = function(cookies, context) {
     }
     context.headers['Set-Cookie'] = arr;
 };
-
-global.getContext = require('./getContext');

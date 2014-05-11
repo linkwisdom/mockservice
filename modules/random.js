@@ -103,7 +103,7 @@ exports.float = function (min, max, precise) {
  * 获取随机时间戳
  * @param  {number} pre   当前时间之前多少天
  * @param  {number} after 当前时间之后多少天
- * @return {number}       时间戳值
+ * @return {string}       时间戳值
  * @public
  */
 exports.timestamp = function (pre, after) {
@@ -123,7 +123,7 @@ exports.timestamp = function (pre, after) {
  * @public
  */
 exports.formatDate = function (pre, after, format) {
-    var moment = require('moment');
+    var moment = require('./moment');
     format || (format = 'YYYY-MM-DD');
     var timestamp = +this.timestamp(pre, after);
     return moment.utc(timestamp).format(format);

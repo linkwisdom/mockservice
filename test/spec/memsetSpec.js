@@ -30,8 +30,7 @@ describe('jasmine-node', function () {
     });
 
     set.remove({mod: 3});
-    console.log(set.length);
-
+    
     it('test remove memset', function () {
         expect(set.length).toBeLessThan(13);
     });
