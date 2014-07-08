@@ -72,25 +72,17 @@ exports.getQueryPath = function (request) {
     var query = request.query;
     var body = request.body;
 
+if (!query.path) {
+    console.log(body);
+}
     // 支持param和params两种参数接口
-    var path = query.path || body.path;
-
-    // 如果未指定path, 以url.pathname作为path值
-    if (!path) {
-        // 删除请求后缀，如果有
-        path = request.pathname.replace(/\.\w{1,5}$/, '');
-        // 删除前缀 `/`
-        if (path.charAt(0) == '/') {
-            path = path.substr(1);
-        }
-    }
+    var path = query.path || body.path || request.pathname;
 
     if (path) {
-        // 这是为了兼容各种系统路径结构问题
-        // 所有`/`转为`_`方便mock接口命名
         path = path.replace(/\//g, '_');
     }
-    
+
+    // 所有/转为_方便mock接口命名
     return path;
 };
 

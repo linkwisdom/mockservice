@@ -45,8 +45,7 @@ function matchPath(file, regs) {
 
 function getServicePath(filename, basePath) {
     if (basePath && matchPath(basePath, config.pathRegs)) {
-        // 删除后缀，转义路径符号
-        return basePath.replace(/\.\w{2,5}$/, '').replace(/[\/\\]/g, '_');
+        return basePath.replace('.js', '').replace(/\//g, '_');
     }
 
     if (matchPath(filename, config.pathRegs)) {
@@ -58,7 +57,7 @@ function getServicePath(filename, basePath) {
 function getRelativePath(pathname, baseDir) {
     var idx = pathname.indexOf(baseDir);
     var size = baseDir && baseDir.length || 0;
-    
+
     if (idx >= 0) {
         return pathname.substr(idx + size + 1);
     } else {
