@@ -280,6 +280,43 @@ module.exports = function (path, param, context) {
 ```
 
 
-### ISSUE todo
+### 支持`REST-style`的AJAX
 
-- 构造数据支持简单物料读写逻辑
+- 参考test/service/ 配置
+- 增加`baseDir`配置，path基于baseDir产生
+
+```js
+    {
+        baseDir: __dirname,
+
+        // 接口名匹配规则
+        pathRegs: [ /(ADD|GET|SET|DEL)\/\w+/],
+
+        // 包路径配置
+        packages: {
+            database: './database',
+        }
+    }
+```
+
+#### mock参数问题
+
+- 为实现动态构造数据，需要获得两个关键参数`path`和`param`
+- path 表示ws名称，可以通过请求路径`pathname`或者请求参数`path`字段匹配
+- param 表示提交的业务关注的请求参数，自动按优先级顺序从参数列表中获取
+
+***path的参数产生规则***
+
+```js
+    context.path = ( post && post.path ) || (query && query.path) || `pathname - baseDir`
+```
+
+
+***param参数产生的逻辑如下***
+
+```js
+
+ context.param = ( post && post.param || post ) || (query && query.param || query )
+ 
+```
+
