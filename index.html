@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mockservice by linkwisdom</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mockservice</h1>
+        <p>mockservice in js</p>
+        <p class="view"><a href="https://github.com/linkwisdom/mockservice">View the Project on GitHub <small>linkwisdom/mockservice</small></a></p>
+        <ul>
+          <li><a href="https://github.com/linkwisdom/mockservice/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/linkwisdom/mockservice/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/linkwisdom/mockservice">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>mockservice <a href="https://npmjs.org/package/mockservice"><img src="https://badge.fury.io/js/mockservice.png" alt="NPM version"></a> <a href="https://david-dm.org/linkwisdom/mockservice"><img src="https://david-dm.org/linkwisdom/mockservice.png" alt="Dependencies Status"></a></p>
+
+<h1></h1>
+
+<blockquote>
+<p>构造数据服务</p>
+</blockquote>
+
+<hr>
+
+<h2>
+<a id="安装与配置" class="anchor" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>安装与配置</h2>
+
+<h3>
+<a id="选择npm安装" class="anchor" href="#%E9%80%89%E6%8B%A9npm%E5%AE%89%E8%A3%85" aria-hidden="true"><span class="octicon octicon-link"></span></a>选择npm安装</h3>
+
+<blockquote>
+<p>npm install mockservice</p>
+</blockquote>
+
+<h3>
+<a id="gitub安装-需要支持git协议" class="anchor" href="#gitub%E5%AE%89%E8%A3%85-%E9%9C%80%E8%A6%81%E6%94%AF%E6%8C%81git%E5%8D%8F%E8%AE%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>gitub安装 (需要支持git协议)</h3>
+
+<blockquote>
+<p>npm install git://github.com/fcfe/mockservice.git</p>
+</blockquote>
+
+<h3>
+<a id="配置edp服务器" class="anchor" href="#%E9%85%8D%E7%BD%AEedp%E6%9C%8D%E5%8A%A1%E5%99%A8" aria-hidden="true"><span class="octicon octicon-link"></span></a>配置edp服务器</h3>
+
+<p>/// (如果开发依赖不是是edp环境，绕道<a href="#mock-cli">mock-cli</a>)</p>
+
+<blockquote>
+<p>配置方法: 在edp-webserver-config文件中添加如下代码</p>
+</blockquote>
+
+<div class="highlight highlight-js"><pre>    <span class="pl-sv">exports</span>.<span class="pl-sc">port</span> <span class="pl-k">=</span> <span class="pl-c1">8848</span>;
+
+    <span class="pl-s">var</span> ms <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>mockservice<span class="pl-pds">'</span></span>);
+    ms.config({
+        <span class="pl-c">// dir 相当于定义了mock的basedir 及require的baseUrl</span>
+        dir<span class="pl-k">:</span> <span class="pl-sv">__dirname</span> <span class="pl-k">+</span> <span class="pl-s1"><span class="pl-pds">'</span>/phoenix/debug<span class="pl-pds">'</span></span>
+    });
+
+    <span class="pl-c">// edp 通过getLocations 路由请求处理器</span>
+    <span class="pl-s3">exports</span>.<span class="pl-en">getLocations</span> <span class="pl-k">=</span> <span class="pl-st">function</span> () {
+        <span class="pl-k">return</span> [
+            { <span class="pl-c">// 将特定请求转向代理</span>
+                location<span class="pl-k">:</span><span class="pl-sr"> <span class="pl-pds">/</span>path=GET<span class="pl-cce">\/</span>nikon<span class="pl-pds">/</span></span>,
+                handler<span class="pl-k">:</span> ms.proxy({
+                        replace<span class="pl-k">:</span> { <span class="pl-c">// 对url的替换规则</span>
+                            source<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>/nirvana-workspace<span class="pl-pds">'</span></span>,
+                            target<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+                        },
+                        host<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>dev.liandong.org<span class="pl-pds">'</span></span>,
+                        port<span class="pl-k">:</span> <span class="pl-c1">8848</span>
+                    });
+            },
+            { <span class="pl-c">// 其它请求转为本地mock</span>
+                location<span class="pl-k">:</span><span class="pl-sr"> <span class="pl-pds">/</span><span class="pl-k">^</span><span class="pl-cce">\/</span>request<span class="pl-c1">.</span>ajax<span class="pl-pds">/</span></span>, 
+                handler<span class="pl-k">:</span> ms.request()
+            }
+        ];
+    };</pre></div>
+
+<h3>
+<a id="多个项目模块的配置" class="anchor" href="#%E5%A4%9A%E4%B8%AA%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97%E7%9A%84%E9%85%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>多个项目模块的配置</h3>
+
+<ul>
+<li>传入config为数组</li>
+</ul>
+
+<div class="highlight highlight-js"><pre>    ms.config([
+        {
+            dir<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./response<span class="pl-pds">'</span></span>,
+            logError<span class="pl-k">:</span> {
+                logFile<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>ms-error-log<span class="pl-pds">'</span></span>
+            }
+        },
+        {
+            dir<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./debug<span class="pl-pds">'</span></span>
+        }
+    ]);</pre></div>
+
+<ul>
+<li>多次config</li>
+</ul>
+
+<div class="highlight highlight-js"><pre>    ms.config({
+        dir<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./response<span class="pl-pds">'</span></span>,
+        packages<span class="pl-k">:</span> {
+            <span class="pl-s1"><span class="pl-pds">'</span>lib<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./service<span class="pl-pds">'</span></span>
+        }
+    });
+
+    ms.config({
+        dir<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./debug<span class="pl-pds">'</span></span>,
+        packages<span class="pl-k">:</span> {
+            <span class="pl-s1"><span class="pl-pds">'</span>service<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./service<span class="pl-pds">'</span></span>
+        }
+    });</pre></div>
+
+<ul>
+<li><p>配置说明</p></li>
+</ul>
+
+<ol>
+<li>每个模块的配置独立可以有分别的dir和packages配置</li>
+<li>
+<code>packages</code>不同模块可以共享，因此不可命名冲突</li>
+<li>多次<code>logError</code>配置只有最后一次有效</li>
+<li><p>建议<code>packages</code>、<code>cache</code>、<code>pathRegs</code>的配置分别写到项目模块配置文件<code>ms-config.js</code>文件中</p></li>
+</ol>
+
+<ul>
+<li>启动服务器</li>
+</ul>
+
+<blockquote>
+<p>edp ws start</p>
+</blockquote>
+
+<ul>
+<li>使用edp时建议mocksrvice安装在项目代码上一级目录, 如<code>F://fengchao/node_modules</code>
+</li>
+</ul>
+
+<h3>
+<a id="mock-cli" class="anchor" href="#mock-cli" aria-hidden="true"><span class="octicon octicon-link"></span></a>mock-cli</h3>
+
+<ul>
+<li>
+<p>如使用独立服务器; 需要全局安装 <code>npm install mocksrvice -g</code>; </p>
+
+<p>// 进入工作路径
+cd workspace</p>
+
+<p>// 启动mock服务器
+mock 8848</p>
+</li>
+</ul>
+
+<h3>
+<a id="ms-configjs配置" class="anchor" href="#ms-configjs%E9%85%8D%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>ms-config.js配置</h3>
+
+<blockquote>
+<p>ms-config.js 文件是可选文件，配置是为了使用更方便
+ms-config.js 文件可以放到目标文件夹下；只影响当前文件夹或子文件夹下的模块</p>
+
+<p>详细配置参考 <a href="https://github.com/linkwisdom/mockservice/blob/master/docs/config.md">config 详细说明</a>;</p>
+</blockquote>
+
+<div class="highlight highlight-js"><pre>    <span class="pl-sv">module</span>.exports <span class="pl-k">=</span> {
+        <span class="pl-c">// mock接口文件是否缓存</span>
+        cache<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+
+        <span class="pl-c">// 接口匹配规则</span>
+        pathRegs<span class="pl-k">:</span> [<span class="pl-sr"><span class="pl-pds">/</span><span class="pl-c1">\w</span><span class="pl-k">+</span>_<span class="pl-c1">\w</span><span class="pl-k">+</span><span class="pl-pds">/</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>scookie<span class="pl-pds">'</span></span>, <span class="pl-s1"><span class="pl-pds">'</span>zebra<span class="pl-pds">'</span></span>],
+
+        <span class="pl-c">// 以下配置只在baseDir中有效</span>
+        <span class="pl-c">// packages 定义了基于basedir的寻址方式</span>
+        packages<span class="pl-k">:</span> {
+            <span class="pl-s1"><span class="pl-pds">'</span>lib<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./lib<span class="pl-pds">'</span></span>,
+            <span class="pl-s1"><span class="pl-pds">'</span>tpl<span class="pl-pds">'</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./template<span class="pl-pds">'</span></span>
+        },
+        <span class="pl-c">// 如果不写logError，则错误信息不显示输出</span>
+        logError<span class="pl-k">:</span> {
+            <span class="pl-c">// 如果不指定logFile，则将错误信息输出到控制台</span>
+            logFile<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>ms-erorr.log<span class="pl-pds">'</span></span>
+        }
+    };</pre></div>
+
+<hr>
+
+<h3>
+<a id="使用说明" class="anchor" href="#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E" aria-hidden="true"><span class="octicon octicon-link"></span></a>使用说明</h3>
+
+<blockquote>
+<p>启动程序后ms自动扫描目录下所有index.js文件及符合特定规则的文件（如果需要，规则可由ms-config.js文件配置）;</p>
+
+<p>mock文件不会立即加载；只有请求触发时会加载；且不进行缓存；</p>
+
+<p>测试：启动edp或mock程序；浏览器中测试，或发curl请求</p>
+</blockquote>
+
+<pre><code> http://localhost:8848/request.ajax?path=GET/auth&amp;param={}
+</code></pre>
+
+<hr>
+
+<h2>
+<a id="构造mock数据规范" class="anchor" href="#%E6%9E%84%E9%80%A0mock%E6%95%B0%E6%8D%AE%E8%A7%84%E8%8C%83" aria-hidden="true"><span class="octicon octicon-link"></span></a>构造mock数据规范</h2>
+
+<ul>
+<li>请求规范</li>
+</ul>
+
+<blockquote>
+<p>以下规范为默认的请求规范，如果不符合，可自定义getContext方法获取<code>path</code>、<code>param</code>和<code>Context</code>对象</p>
+
+<p>前端代码发送真实请求；请求路径符合request.ajax?path=XXX形式;
+参数param可以是POST或GET参数
+param符合严格规范的json格式</p>
+</blockquote>
+
+<ul>
+<li>构造数据代码规范</li>
+</ul>
+
+<blockquote>
+<p>所有响应request.ajax?path={pathname}&amp;param={object}请求每个pathname对应一个mock文件；</p>
+
+<p>mock文件名<code>/</code>替换为<code>_</code>；</p>
+
+<p>独立mock文件命名为{pkgname}/{pathname}.js;</p>
+</blockquote>
+
+<p>-- 对应每个接口应该指定一个响应函数；响应函数有固定参数列表(path, param, context)</p>
+
+<p>-- index.js 文件可以定义多个接口的响应函数 (但是不建议写到index文件)</p>
+
+<p>-- {pathname}.js 文件只能定义对应pathname的响应函数</p>
+
+<p>————————————————————————</p>
+
+<h2>
+<a id="mock文件示例" class="anchor" href="#mock%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>mock文件示例</h2>
+
+<div class="highlight highlight-js"><pre><span class="pl-c">// mock 的用法参考./test的文件</span>
+
+<span class="pl-c">/**</span>
+<span class="pl-c"> * 参数说明</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * @param  {string} path    路由路径</span>
+<span class="pl-c"> * @param  {Object} param   请求参数</span>
+<span class="pl-c"> * @param  {HttpRequest} context.request</span>
+<span class="pl-c"> * @param  {HttpResponse} context.response</span>
+<span class="pl-c"> * @param  {function({array|object})} context.setCookie</span>
+<span class="pl-c"> * @param  {function} context.update 更新服务</span>
+<span class="pl-c"> */</span>
+<span class="pl-s3">module</span>.<span class="pl-en">exports</span> <span class="pl-k">=</span> <span class="pl-st">function</span> (<span class="pl-vpf">path</span>, <span class="pl-vpf">param</span>, <span class="pl-vpf">context</span>) {
+
+    <span class="pl-c">// tpl在packages定义了路径</span>
+    <span class="pl-s">var</span> tpl <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>tpl/hospital<span class="pl-pds">'</span></span>);
+
+    <span class="pl-c">// lib/mendb是基于menset概念设计(未完全实现）</span>
+    <span class="pl-s">var</span> db <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>lib/mendb<span class="pl-pds">'</span></span>);
+
+    <span class="pl-c">/**</span>
+<span class="pl-c">     * </span>
+<span class="pl-c">     * moment, random, template 为支持mockservice内置的组件</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">var</span> moment <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>moment<span class="pl-pds">'</span></span>);  <span class="pl-c">// 时间格式化组件</span>
+    <span class="pl-s">var</span> random <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>random<span class="pl-pds">'</span></span>);  <span class="pl-c">// 随机数据产生器</span>
+    <span class="pl-s">var</span> template <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">'</span>template<span class="pl-pds">'</span></span>); <span class="pl-c">// 基于etpl的模板解析引擎 </span>
+
+    <span class="pl-c">/**</span>
+<span class="pl-c">     * 因为采用的是menset设计，因此直接赋值相当于改变了数据集</span>
+<span class="pl-c">     * db 支持数据集的增删改查</span>
+<span class="pl-c">     */</span>
+    <span class="pl-s">var</span> hospital <span class="pl-k">=</span> db.hospital.<span class="pl-s3">find</span>({id<span class="pl-k">:</span> param.hospitalId})[<span class="pl-c1">0</span>];
+    <span class="pl-c">// 修改hospital的访问量</span>
+    hospital.visitCount<span class="pl-k">++</span>;
+
+    <span class="pl-c">// 业务数据</span>
+    <span class="pl-s">var</span> data <span class="pl-k">=</span> {
+        timestamp<span class="pl-k">:</span> random.timestamp(),
+        title<span class="pl-k">:</span> tpl.<span class="pl-sc">title</span>(hospital),
+        creative<span class="pl-k">:</span> tpl.creative({
+            id<span class="pl-k">:</span> hospital.<span class="pl-sc">id</span>,
+            name<span class="pl-k">:</span> hospital.<span class="pl-sc">name</span>,
+            city<span class="pl-k">:</span> random.words(hospital.cities), <span class="pl-c">// 随机选择国内城市</span>
+            section<span class="pl-k">:</span> random.words(hospital.sections) <span class="pl-c">// 随机选择医院科室</span>
+        })
+     };
+
+    <span class="pl-c">// 返回数据</span>
+    <span class="pl-k">return</span> {
+        status<span class="pl-k">:</span> <span class="pl-c1">200</span>, <span class="pl-c">// 业务status，与http状态无关</span>
+        _status<span class="pl-k">:</span> <span class="pl-c1">300</span>, <span class="pl-c">// 指定http状态； 不输出</span>
+        _timeout<span class="pl-k">:</span> <span class="pl-c1">1000</span>, <span class="pl-c">// 延迟发送毫秒时间；不输出</span>
+        data<span class="pl-k">:</span> data
+    };
+};
+
+<span class="pl-c">// 注意db相关的功能尚在完善与测试中；暂不要在业务中使用</span>
+<span class="pl-c">// 以上代码参考 test/response/GET_hospital.js</span></pre></div>
+
+<h2>
+<a id="扩展modules-说明" class="anchor" href="#%E6%89%A9%E5%B1%95modules-%E8%AF%B4%E6%98%8E" aria-hidden="true"><span class="octicon octicon-link"></span></a>扩展modules 说明</h2>
+
+<blockquote>
+<p>扩展的modules是为了更好的支持mock数据的生成；</p>
+
+<p>所有的modules通过require(modulename)既可以获取到；</p>
+
+<p>从v0.1.12开始停止使用include; 全部使用require方式获取组件；</p>
+
+<p>mockservice; 内置了以下通用mock支持组件</p>
+</blockquote>
+
+<ul>
+<li>
+<p>random : 产生随机数据 </p>
+
+<blockquote>
+<p><a href="https://github.com/linkwisdom/mockservice/blob/master/docs/random.md">random 说明文档</a></p>
+</blockquote>
+</li>
+<li>
+<p>storage : 数据增删改查操作支持</p>
+
+<blockquote>
+<p><a href="https://github.com/linkwisdom/mockservice/blob/master/docs/storage.md">storage 说明文档</a></p>
+</blockquote>
+</li>
+<li>
+<p>template : 采用的是etpl解析引擎，方便模板化产生数据</p>
+
+<blockquote>
+<p><a href="https://github.com/linkwisdom/mockservice/blob/master/docs/template.md">template 说明文档</a></p>
+</blockquote>
+</li>
+<li>
+<p>moment : 基于moment.js时间格式化组件（无多国语言包）</p>
+
+<blockquote>
+<p><a href="http://momentjs.cn/docs/">moment 中文</a></p>
+</blockquote>
+</li>
+</ul>
+
+<hr>
+
+<h3>
+<a id="调试" class="anchor" href="#%E8%B0%83%E8%AF%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>调试</h3>
+
+<ul>
+<li>在执行参数列表中出现 <code>--debug</code> 字段，即可进入调试模式；</li>
+<li>为方便调试，建议安装node-inspector；即 <code>npm install node-inspector -g</code>
+</li>
+</ul>
+
+<div class="highlight highlight-bash"><pre>
+    <span class="pl-c"># edp 环境调试</span>
+    edp ws start --debug</pre></div>
+
+<h3>
+<a id="支持rest-style的ajax" class="anchor" href="#%E6%94%AF%E6%8C%81rest-style%E7%9A%84ajax" aria-hidden="true"><span class="octicon octicon-link"></span></a>支持<code>REST-style</code>的AJAX</h3>
+
+<ul>
+<li>参考test/service/ 配置</li>
+<li>增加<code>baseDir</code>配置，path基于baseDir产生</li>
+</ul>
+
+<div class="highlight highlight-js"><pre>    {
+        baseDir<span class="pl-k">:</span> <span class="pl-sv">__dirname</span>,
+
+        <span class="pl-c">// 接口名匹配规则</span>
+        pathRegs<span class="pl-k">:</span> [<span class="pl-sr"> <span class="pl-pds">/</span>(ADD<span class="pl-k">|</span>GET<span class="pl-k">|</span>SET<span class="pl-k">|</span>DEL)<span class="pl-cce">\/</span><span class="pl-c1">\w</span><span class="pl-k">+</span><span class="pl-pds">/</span></span>],
+
+        <span class="pl-c">// 包路径配置</span>
+        packages<span class="pl-k">:</span> {
+            database<span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">'</span>./database<span class="pl-pds">'</span></span>,
+        }
+    }</pre></div>
+
+<h4>
+<a id="mock参数问题" class="anchor" href="#mock%E5%8F%82%E6%95%B0%E9%97%AE%E9%A2%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>mock参数问题</h4>
+
+<ul>
+<li>为实现动态构造数据，需要获得两个关键参数<code>path</code>和<code>param</code>
+</li>
+<li>path 表示ws名称，可以通过请求路径<code>pathname</code>或者请求参数<code>path</code>字段匹配</li>
+<li>param 表示提交的业务关注的请求参数，自动按优先级顺序从参数列表中获取</li>
+</ul>
+
+<p><strong><em>path的参数产生规则</em></strong></p>
+
+<div class="highlight highlight-js"><pre>    context.path <span class="pl-k">=</span> ( post <span class="pl-k">&amp;&amp;</span> post.path ) <span class="pl-k">||</span> (query <span class="pl-k">&amp;&amp;</span> query.path) <span class="pl-k">||</span> <span class="pl-s1"><span class="pl-pds">`</span>pathname - baseDir<span class="pl-pds">`</span></span></pre></div>
+
+<p><strong><em>param参数产生的逻辑如下</em></strong></p>
+
+<div class="highlight highlight-js"><pre>
+ context.param <span class="pl-k">=</span> ( post <span class="pl-k">&amp;&amp;</span> post.param <span class="pl-k">||</span> post ) <span class="pl-k">||</span> (query <span class="pl-k">&amp;&amp;</span> query.param <span class="pl-k">||</span> query )
+</pre></div>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/linkwisdom">linkwisdom</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
